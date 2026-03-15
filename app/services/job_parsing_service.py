@@ -170,7 +170,12 @@ class JobParsingService:
         return best_candidate, warnings
 
     def _candidate_text_score(self, candidate: Tag) -> int:
-        return len(self._extract_visible_text(candidate))
+        score = len(self._extract_visible_text(candidate))
+        # Prefer semantic content roots over the full document to avoid
+        # folding head/title content into the extracted job text.
+        if candidate.name == "[document]":
+            score -= 1_000
+        return score
 
     def _extract_visible_text(self, root: Tag) -> str:
         lines: list[str] = []

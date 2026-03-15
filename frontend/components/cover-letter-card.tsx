@@ -1,3 +1,6 @@
+"use client";
+
+import { useI18n } from "@/components/i18n/locale-provider";
 import { SectionCard } from "@/components/section-card";
 import type { ApplicationPackageResponse } from "@/types/api";
 
@@ -6,8 +9,10 @@ type CoverLetterCardProps = {
 };
 
 function BulletList({ items }: { items: string[] }) {
+  const { t } = useI18n();
+
   if (!items.length) {
-    return <p className="text-sm text-slate-500">None.</p>;
+    return <p className="text-sm text-slate-500">{t("common.states.none")}</p>;
   }
 
   return (
@@ -22,10 +27,12 @@ function BulletList({ items }: { items: string[] }) {
 }
 
 export function CoverLetterCard({ coverLetter }: CoverLetterCardProps) {
+  const { t } = useI18n();
+
   return (
     <SectionCard
-      title="Cover Letter"
-      description="Drafted Anschreiben content with the key signals used to build it."
+      title={t("workspace.cards.coverLetter.title")}
+      description={t("workspace.cards.coverLetter.description")}
     >
       <div className="space-y-5">
         <pre className="overflow-x-auto rounded-2xl border border-slate-200 bg-slate-50 p-5 font-sans text-sm leading-7 text-slate-800 whitespace-pre-wrap">
@@ -33,11 +40,15 @@ export function CoverLetterCard({ coverLetter }: CoverLetterCardProps) {
         </pre>
         <div className="grid gap-5 md:grid-cols-2">
           <div className="space-y-2">
-            <h4 className="text-sm font-semibold text-slate-900">Key points used</h4>
+            <h4 className="text-sm font-semibold text-slate-900">
+              {t("workspace.cards.coverLetter.keyPoints")}
+            </h4>
             <BulletList items={coverLetter.key_points_used} />
           </div>
           <div className="space-y-2">
-            <h4 className="text-sm font-semibold text-slate-900">Warnings</h4>
+            <h4 className="text-sm font-semibold text-slate-900">
+              {t("workspace.cards.coverLetter.warnings")}
+            </h4>
             <BulletList items={coverLetter.warnings} />
           </div>
         </div>

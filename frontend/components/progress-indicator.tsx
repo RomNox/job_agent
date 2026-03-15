@@ -1,3 +1,6 @@
+"use client";
+
+import { useI18n } from "@/components/i18n/locale-provider";
 import { cn } from "@/lib/utils";
 
 type WorkflowStep = "idle" | "parsing" | "preparing" | "done";
@@ -9,19 +12,20 @@ type ProgressIndicatorProps = {
 
 const stepOrder = ["parsing", "preparing"] as const;
 
-const stepLabels: Record<(typeof stepOrder)[number], string> = {
-  parsing: "Parsing",
-  preparing: "Preparing package",
-};
-
 export function ProgressIndicator({
   currentStep,
   skipParsing = false,
 }: ProgressIndicatorProps) {
+  const { t } = useI18n();
+  const stepLabels: Record<(typeof stepOrder)[number], string> = {
+    parsing: t("workspace.progress.steps.parsing"),
+    preparing: t("workspace.progress.steps.preparing"),
+  };
+
   return (
     <div className="rounded-3xl border border-border bg-white p-5 shadow-soft">
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-        Workflow progress
+        {t("workspace.progress.title")}
       </p>
       <div className="mt-4 flex flex-col gap-4">
         {stepOrder.map((step, index) => {
@@ -55,12 +59,12 @@ export function ProgressIndicator({
                 <p className="text-sm font-medium text-slate-900">{stepLabels[step]}</p>
                 <p className="text-xs text-slate-500">
                   {isSkipped
-                    ? "Skipped"
+                    ? t("workspace.progress.states.skipped")
                     : isCurrent
-                    ? "Running now"
+                    ? t("workspace.progress.states.running")
                     : isComplete
-                      ? "Completed"
-                      : "Waiting"}
+                      ? t("workspace.progress.states.completed")
+                      : t("workspace.progress.states.waiting")}
                 </p>
               </div>
             </div>

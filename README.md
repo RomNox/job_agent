@@ -196,6 +196,8 @@ pytest
 - `POST /api/v1/jobs/analyze`: structured analysis of a raw job posting
 - `POST /api/v1/jobs/parse`: fetch and extract readable job-posting text from a URL
 - `POST /api/v1/jobs/match`: candidate-to-job match analysis
+- `POST /api/v1/search/jobs`: Jooble-backed job search endpoint with normalized results
+- `POST /api/v1/search/resolve-job`: resolve best-available raw job content from a selected search result
 - `POST /api/v1/applications/cover-letter`: tailored German cover letter generation
 - `POST /api/v1/applications/tailor-cv`: tailored CV summary and highlights
 - `POST /api/v1/applications/prepare`: complete application package assembly
@@ -210,9 +212,11 @@ The frontend is a minimal Next.js App Router workspace under `frontend/`.
 - Default backend base URL: `http://127.0.0.1:8000`
 - The local backend already allows requests from `http://localhost:3000` and `http://127.0.0.1:3000`
 - The UI provides a workflow-oriented workspace for parsing a job URL, filling in a candidate profile, and reviewing the prepared application package
+- The UI also includes `/search` for searching Jooble jobs and handing off a selected result into the workspace
 
 ## Notes
 
 - Claude calls require `ANTHROPIC_API_KEY` in `.env`.
+- Jooble search calls require `JOOBLE_API_KEY` in `.env`.
 - Tool modules are placeholders by design and currently return stubbed results.
 - The scaffold is ready for new services, tools, and skill definitions without changing the top-level layout.

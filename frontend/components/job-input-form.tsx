@@ -2,6 +2,7 @@
 
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 
+import { useI18n } from "@/components/i18n/locale-provider";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -19,17 +20,19 @@ export function JobInputForm({
   errors,
   prefersRawText,
 }: JobInputFormProps) {
+  const { t } = useI18n();
+
   return (
     <SectionCard
-      title="Job Input"
-      description="Paste a job URL or raw job text. If both are provided, raw text is used for the backend request."
+      title={t("workspace.jobInput.title")}
+      description={t("workspace.jobInput.description")}
     >
       <div className="space-y-6">
         <div className="space-y-2">
-          <Label htmlFor="job_url">Job URL</Label>
+          <Label htmlFor="job_url">{t("common.fields.jobUrl")}</Label>
           <Input
             id="job_url"
-            placeholder="https://example.com/job-posting"
+            placeholder={t("common.placeholders.jobUrl")}
             {...register("job_url")}
           />
           {errors.job_url ? (
@@ -38,10 +41,10 @@ export function JobInputForm({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="raw_job_text">Raw job text</Label>
+          <Label htmlFor="raw_job_text">{t("common.fields.rawJobText")}</Label>
           <Textarea
             id="raw_job_text"
-            placeholder="Paste the visible text of the job posting here."
+            placeholder={t("common.placeholders.rawJobText")}
             {...register("raw_job_text")}
           />
           {errors.raw_job_text ? (
@@ -51,8 +54,7 @@ export function JobInputForm({
 
         {prefersRawText ? (
           <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
-            Raw job text will be used directly. The URL is kept only as optional source
-            context.
+            {t("workspace.jobInput.rawTextNotice")}
           </div>
         ) : null}
       </div>

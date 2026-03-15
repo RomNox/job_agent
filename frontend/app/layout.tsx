@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
+import { AuthProvider } from "@/components/auth/auth-provider";
+import { LocaleProvider } from "@/components/i18n/locale-provider";
+
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "job-agent workspace",
-  description: "MVP workspace for preparing job and Ausbildung application packages.",
+  title: "Job Agent",
+  description:
+    "Persönlicher Karriere-Assistent für Jobsuche und Bewerbung in Deutschland.",
 };
 
 export default function RootLayout({
@@ -14,8 +18,12 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="font-sans">{children}</body>
+    <html lang="de">
+      <body className="font-sans">
+        <LocaleProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </LocaleProvider>
+      </body>
     </html>
   );
 }

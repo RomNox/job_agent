@@ -1,3 +1,6 @@
+"use client";
+
+import { useI18n } from "@/components/i18n/locale-provider";
 import { SectionCard } from "@/components/section-card";
 
 type ChecklistCardProps = {
@@ -6,8 +9,10 @@ type ChecklistCardProps = {
 };
 
 function BulletList({ items }: { items: string[] }) {
+  const { t } = useI18n();
+
   if (!items.length) {
-    return <p className="text-sm text-slate-500">None.</p>;
+    return <p className="text-sm text-slate-500">{t("common.states.none")}</p>;
   }
 
   return (
@@ -22,18 +27,24 @@ function BulletList({ items }: { items: string[] }) {
 }
 
 export function ChecklistCard({ checklist, warnings }: ChecklistCardProps) {
+  const { t } = useI18n();
+
   return (
     <SectionCard
-      title="Checklist / Warnings"
-      description="Final action items and risks before the application is sent."
+      title={t("workspace.cards.checklist.title")}
+      description={t("workspace.cards.checklist.description")}
     >
       <div className="grid gap-5 md:grid-cols-2">
         <div className="space-y-2">
-          <h4 className="text-sm font-semibold text-slate-900">Checklist</h4>
+          <h4 className="text-sm font-semibold text-slate-900">
+            {t("workspace.cards.checklist.checklist")}
+          </h4>
           <BulletList items={checklist} />
         </div>
         <div className="space-y-2">
-          <h4 className="text-sm font-semibold text-slate-900">Warnings</h4>
+          <h4 className="text-sm font-semibold text-slate-900">
+            {t("workspace.cards.checklist.warnings")}
+          </h4>
           <BulletList items={warnings} />
         </div>
       </div>

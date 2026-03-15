@@ -1,26 +1,43 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMemo, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
+import { useAuth } from "@/components/auth/auth-provider";
 import { CandidateProfileForm } from "@/components/candidate-profile-form";
 import { ChecklistCard } from "@/components/checklist-card";
 import { CoverLetterCard } from "@/components/cover-letter-card";
 import { CVTailoringCard } from "@/components/cv-tailoring-card";
+import { LanguageSwitcher } from "@/components/i18n/language-switcher";
+import { useI18n } from "@/components/i18n/locale-provider";
 import { JobInputForm } from "@/components/job-input-form";
 import { MatchResultCard } from "@/components/match-result-card";
 import { ProgressIndicator } from "@/components/progress-indicator";
 import { SectionCard } from "@/components/section-card";
 import { Button } from "@/components/ui/button";
-import { parseJob, prepareApplication } from "@/lib/api";
-import { workspaceFormSchema } from "@/lib/schemas";
+import {
+  getApiErrorMessage,
+  getApiBaseUrl,
+  getCandidateProfile,
+  parseJob,
+  prepareApplication,
+  upsertCandidateProfile,
+} from "@/lib/api";
+import {
+  candidateProfileToWorkspaceValues,
+  formatProfileTimestamp,
+  PROFILE_FIELD_NAMES,
+  workspaceValuesToCandidateProfilePayload,
+  workspaceValuesToProfilePayload,
+} from "@/lib/profile";
+import { consumeResolvedJobContent } from "@/lib/resolved-job-handoff";
+import { createWorkspaceFormSchema } from "@/lib/schemas";
 import type {
   ApplicationPackageResponse,
-  CandidateProfilePayload,
   ParsedJobResponse,
   PrepareApplicationBasePayload,
-  PrepareApplicationPayload,
+  ResolvedJobContent,
   WorkspaceFormValues,
 } from "@/types/api";
 
@@ -30,83 +47,286 @@ const defaultValues: WorkspaceFormValues = {
   job_url: "",
   raw_job_text: "",
   full_name: "",
-  summary: "",
+  email: "",
+  phone: "",
+  location: "",
+  target_role: "",
+  years_of_experience: "",
   skills: "",
-  desired_roles: "",
-  desired_locations: "",
   languages: "",
+  work_authorization: "",
+  remote_preference: "",
+  preferred_locations: "",
+  salary_expectation: "",
+  professional_summary: "",
+  cv_text: "",
 };
 
-export function ApplicationWorkspace() {
+type ApplicationWorkspaceProps = {
+  initialJobUrl?: string;
+  initialRawJobText?: string;
+  initialResolvedJobKey?: string;
+};
+
+type RunWorkspaceFlowOptions = {
+  allowJobContentOnly?: boolean;
+};
+
+export function ApplicationWorkspace({
+  initialJobUrl = "",
+  initialRawJobText = "",
+  initialResolvedJobKey = "",
+}: ApplicationWorkspaceProps) {
+  const { user } = useAuth();
+  const { locale, t } = useI18n();
+  const initialPrefill = buildWorkspacePrefill({
+    jobUrl: initialJobUrl,
+    rawJobText: initialRawJobText,
+  });
   const form = useForm<WorkspaceFormValues>({
-    resolver: zodResolver(workspaceFormSchema),
-    defaultValues,
+    resolver: zodResolver(
+      createWorkspaceFormSchema((key) => t(`validation.${key}`)),
+    ),
+    defaultValues: {
+      ...defaultValues,
+      job_url: initialPrefill.jobUrl,
+      raw_job_text: initialPrefill.rawJobText,
+    },
   });
 
   const [parsedJob, setParsedJob] = useState<ParsedJobResponse | null>(null);
   const [applicationPackage, setApplicationPackage] =
     useState<ApplicationPackageResponse | null>(null);
+  const [prefill, setPrefill] = useState<WorkspacePrefill>(initialPrefill);
+  const [resolvedJobContent, setResolvedJobContent] =
+    useState<ResolvedJobContent | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState<WorkflowStep>("idle");
+  const [hasHydratedProfile, setHasHydratedProfile] = useState(false);
+  const [isProfileLoading, setIsProfileLoading] = useState(false);
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
+  const [profileStatusMessage, setProfileStatusMessage] = useState<string | null>(
+    null,
+  );
+  const [profileErrorMessage, setProfileErrorMessage] = useState<string | null>(
+    null,
+  );
+  const lastAutoSubmittedInputKeyRef = useRef<string | null>(null);
 
   const watchedUrl = form.watch("job_url");
   const watchedRawText = form.watch("raw_job_text");
   const prefersRawText = Boolean(watchedUrl.trim() && watchedRawText.trim());
 
-  const onSubmit = form.handleSubmit(async (values) => {
-    setErrorMessage(null);
+  useEffect(() => {
+    setResolvedJobContent(null);
+    setPrefill(
+      buildWorkspacePrefill({
+        jobUrl: initialJobUrl,
+        rawJobText: initialRawJobText,
+      }),
+    );
+  }, [initialJobUrl, initialRawJobText]);
+
+  useEffect(() => {
+    if (!initialResolvedJobKey) {
+      return;
+    }
+
+    const restoredResolvedJobContent = consumeResolvedJobContent(
+      initialResolvedJobKey,
+    );
+    if (!restoredResolvedJobContent) {
+      setErrorMessage(t("workspace.notices.resolvedRestoreFailed"));
+      return;
+    }
+
+    setResolvedJobContent(restoredResolvedJobContent);
+    setPrefill({
+      jobUrl: restoredResolvedJobContent.source_url,
+      rawJobText: restoredResolvedJobContent.raw_text,
+      autoRunKey: `resolved:${initialResolvedJobKey}`,
+    });
+  }, [initialResolvedJobKey, t]);
+
+  useEffect(() => {
+    form.reset({
+      ...form.getValues(),
+      job_url: prefill.jobUrl,
+      raw_job_text: prefill.rawJobText,
+    });
     setParsedJob(null);
     setApplicationPackage(null);
+    setErrorMessage(null);
+    setCurrentStep("idle");
+  }, [form, prefill.autoRunKey, prefill.jobUrl, prefill.rawJobText]);
+
+  useEffect(() => {
+    if (!user?.id) {
+      setHasHydratedProfile(true);
+      setIsProfileLoading(false);
+      return;
+    }
+
+    let isActive = true;
+    setHasHydratedProfile(false);
+    setIsProfileLoading(true);
+    setProfileErrorMessage(null);
+    setProfileStatusMessage(null);
+
+    void (async () => {
+      try {
+        const profile = await getCandidateProfile();
+        if (!isActive) {
+          return;
+        }
+
+        form.reset(
+          {
+            ...form.getValues(),
+            ...candidateProfileToWorkspaceValues(profile),
+          },
+          { keepDirtyValues: true },
+        );
+        if (!profile.updated_at) {
+          setProfileStatusMessage(t("workspace.profile.noSavedProfile"));
+        } else {
+          setProfileStatusMessage(
+            t("workspace.profile.loadedProfile", {
+              timestamp:
+                formatProfileTimestamp(profile.updated_at, locale) ??
+                t("common.states.recently"),
+            }),
+          );
+        }
+      } catch (error) {
+        if (!isActive) {
+          return;
+        }
+
+        setProfileErrorMessage(
+          getApiErrorMessage(error, {
+            fallback: t("workspace.notices.loadProfileFailed"),
+            network: t("auth.errors.backendUnavailable"),
+          }),
+        );
+      } finally {
+        if (!isActive) {
+          return;
+        }
+
+        setIsProfileLoading(false);
+        setHasHydratedProfile(true);
+      }
+    })();
+
+    return () => {
+      isActive = false;
+    };
+  }, [form, locale, t, user?.id]);
+
+  useEffect(() => {
+    if (!hasHydratedProfile) {
+      return;
+    }
+
+    const autoRunKey = prefill.autoRunKey;
+    const normalizedJobUrl = prefill.jobUrl.trim();
+    const normalizedRawJobText = prefill.rawJobText.trim();
+
+    if (!autoRunKey || (!normalizedJobUrl && !normalizedRawJobText)) {
+      lastAutoSubmittedInputKeyRef.current = null;
+      return;
+    }
+
+    if (lastAutoSubmittedInputKeyRef.current === autoRunKey) {
+      return;
+    }
+
+    lastAutoSubmittedInputKeyRef.current = autoRunKey;
+
+    void runWorkspaceFlow({
+      values: {
+        ...form.getValues(),
+        job_url: normalizedJobUrl,
+        raw_job_text: normalizedRawJobText,
+      },
+      setParsedJob,
+      setApplicationPackage,
+      setErrorMessage,
+      setCurrentStep,
+      fallbackErrorMessage: t("workspace.notices.applicationFailed"),
+      options: { allowJobContentOnly: true },
+    });
+  }, [
+    form,
+    hasHydratedProfile,
+    t,
+    prefill.autoRunKey,
+    prefill.jobUrl,
+    prefill.rawJobText,
+  ]);
+
+  const onSubmit = form.handleSubmit((values) =>
+    runWorkspaceFlow({
+      values,
+      setParsedJob,
+      setApplicationPackage,
+      setErrorMessage,
+      setCurrentStep,
+      fallbackErrorMessage: t("workspace.notices.applicationFailed"),
+    }),
+  );
+  const handleSaveProfile = async () => {
+    setProfileErrorMessage(null);
+    setProfileStatusMessage(null);
+
+    const isValid = await form.trigger(PROFILE_FIELD_NAMES);
+    if (!isValid) {
+      return;
+    }
+
+    setIsSavingProfile(true);
 
     try {
-      const payloadBase = buildPayload(values);
-      const rawJobText = values.raw_job_text.trim();
-      const jobUrl = values.job_url.trim();
-
-      if (rawJobText) {
-        setCurrentStep("preparing");
-        const prepared = await prepareApplication({
-          ...payloadBase,
-          raw_text: rawJobText,
-          source_url: jobUrl || undefined,
-        });
-        setApplicationPackage(prepared);
-        setCurrentStep("done");
-        return;
-      }
-
-      setCurrentStep("parsing");
-      const parsed = await parseJob(jobUrl);
-      setParsedJob(parsed);
-
-      setCurrentStep("preparing");
-      const prepared = await prepareApplication({
-        ...payloadBase,
-        raw_text: parsed.raw_text,
-        source_url: parsed.source_url,
-      });
-      setApplicationPackage(prepared);
-      setCurrentStep("done");
-    } catch (error) {
-      setCurrentStep("idle");
-      setErrorMessage(
-        error instanceof Error
-          ? error.message
-          : "Something went wrong while preparing the application package.",
+      const savedProfile = await upsertCandidateProfile(
+        workspaceValuesToProfilePayload(form.getValues()),
       );
+      form.reset({
+        ...form.getValues(),
+        ...candidateProfileToWorkspaceValues(savedProfile),
+      });
+      setProfileStatusMessage(
+        savedProfile.updated_at
+          ? t("workspace.profile.savedProfileAt", {
+              timestamp:
+                formatProfileTimestamp(savedProfile.updated_at, locale) ??
+                t("common.states.recently"),
+            })
+          : t("workspace.profile.savedProfile"),
+      );
+    } catch (error) {
+      setProfileErrorMessage(
+        getApiErrorMessage(error, {
+          fallback: t("workspace.notices.saveProfileFailed"),
+          network: t("auth.errors.backendUnavailable"),
+        }),
+      );
+    } finally {
+      setIsSavingProfile(false);
     }
-  });
+  };
 
   const hasResults = Boolean(parsedJob || applicationPackage);
-  const resultsTitle = useMemo(() => {
-    if (applicationPackage) {
-      return applicationPackage.job_posting.title;
-    }
-    if (parsedJob?.page_title) {
-      return parsedJob.page_title;
-    }
-    return "Results will appear here";
-  }, [applicationPackage, parsedJob]);
+  const previewFallbackNotice =
+    resolvedJobContent?.fetch_method === "search_preview"
+      ? resolvedJobContent.resolution_notes ??
+        t("workspace.notices.previewFallback")
+      : null;
+  const resultsTitle = applicationPackage
+    ? applicationPackage.job_posting.title
+    : parsedJob?.page_title ||
+      resolvedJobContent?.title ||
+      t("workspace.results.defaultTitle");
 
   return (
     <main className="surface-grid min-h-screen bg-slate-50/60">
@@ -116,21 +336,23 @@ export function ApplicationWorkspace() {
             <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
               <div className="space-y-2">
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                  Job agent workspace
+                  {t("workspace.header.eyebrow")}
                 </p>
                 <h1 className="text-3xl font-semibold tracking-tight text-slate-950">
-                  Prepare a complete application package
+                  {t("workspace.header.title")}
                 </h1>
                 <p className="max-w-3xl text-sm leading-7 text-slate-600">
-                  Use a job URL or raw job text, add the candidate profile, and
-                  assemble the full backend package in one workflow-oriented screen.
+                  {t("workspace.header.description")}
                 </p>
               </div>
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
-                Backend assumed at{" "}
-                <span className="font-mono text-xs text-slate-900">
-                  http://127.0.0.1:8000
-                </span>
+              <div className="flex flex-wrap items-center gap-3">
+                <LanguageSwitcher />
+                <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+                  {t("workspace.header.backendAt")}{" "}
+                  <span className="font-mono text-xs text-slate-900">
+                    {getApiBaseUrl()}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -151,7 +373,18 @@ export function ApplicationWorkspace() {
                 <CandidateProfileForm
                   register={form.register}
                   errors={form.formState.errors}
+                  isProfileLoading={isProfileLoading}
+                  isSavingProfile={isSavingProfile}
+                  profileStatusMessage={profileStatusMessage}
+                  profileErrorMessage={profileErrorMessage}
+                  onSaveProfile={handleSaveProfile}
                 />
+
+                {previewFallbackNotice ? (
+                  <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                    {previewFallbackNotice}
+                  </div>
+                ) : null}
 
                 {errorMessage ? (
                   <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
@@ -167,9 +400,9 @@ export function ApplicationWorkspace() {
                 >
                   {form.formState.isSubmitting
                     ? currentStep === "parsing"
-                      ? "Parsing job page..."
-                      : "Preparing application..."
-                    : "Prepare Application"}
+                      ? t("workspace.actions.parsing")
+                      : t("workspace.actions.preparing")
+                    : t("workspace.actions.prepare")}
                 </Button>
               </form>
             </section>
@@ -179,40 +412,54 @@ export function ApplicationWorkspace() {
                 title={resultsTitle}
                 description={
                   hasResults
-                    ? "Structured output from the backend workflow."
-                    : "Submit the form to render the parsed job, fit analysis, draft cover letter, CV tailoring notes, and the final checklist."
+                    ? t("workspace.notices.structuredOutput")
+                    : resolvedJobContent
+                      ? t("workspace.notices.resolvedLoaded")
+                      : t("workspace.notices.submitToRender")
                 }
               >
                 {!hasResults ? (
                   <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-6 py-10 text-sm leading-7 text-slate-500">
-                    This workspace is product-first rather than chat-first. Once you
-                    submit the form, each backend workflow artifact will appear here as a
-                    separate review card.
+                    {resolvedJobContent
+                      ? t("workspace.notices.resolvedResults")
+                      : t("workspace.notices.emptyResults")}
                   </div>
                 ) : (
                   <div className="space-y-6">
                     {parsedJob ? (
                       <SectionCard
-                        title="Parsed Job"
-                        description="Readable text extracted from the job page before the application package call."
+                        title={t("workspace.results.parsedJobTitle")}
+                        description={t("workspace.results.parsedJobDescription")}
                         className="border-dashed shadow-none"
                       >
                         <div className="space-y-4">
                           <div className="grid gap-4 sm:grid-cols-2">
-                            <InfoBlock label="Source URL" value={parsedJob.source_url} mono />
                             <InfoBlock
-                              label="Detected source"
-                              value={parsedJob.detected_source ?? "Unknown"}
+                              label={t("workspace.results.sourceUrl")}
+                              value={parsedJob.source_url}
+                              mono
+                            />
+                            <InfoBlock
+                              label={t("workspace.results.detectedSource")}
+                              value={
+                                parsedJob.detected_source ??
+                                t("common.states.unknown")
+                              }
                             />
                           </div>
                           <InfoBlock
-                            label="Page title"
-                            value={parsedJob.page_title ?? "Unavailable"}
+                            label={t("workspace.results.pageTitle")}
+                            value={
+                              parsedJob.page_title ?? t("common.states.unavailable")
+                            }
                           />
-                          <TextBlock label="Raw text" value={parsedJob.raw_text} />
+                          <TextBlock
+                            label={t("workspace.results.rawText")}
+                            value={parsedJob.raw_text}
+                          />
                           {parsedJob.extraction_warnings.length ? (
                             <BulletSection
-                              title="Extraction warnings"
+                              title={t("workspace.results.extractionWarnings")}
                               items={parsedJob.extraction_warnings}
                             />
                           ) : null}
@@ -223,40 +470,52 @@ export function ApplicationWorkspace() {
                     {applicationPackage ? (
                       <>
                         <SectionCard
-                          title="Job Posting"
-                          description="Structured job payload used to assemble the package."
+                          title={t("workspace.results.jobPostingTitle")}
+                          description={t("workspace.results.jobPostingDescription")}
                           className="border-dashed shadow-none"
                         >
                           <div className="space-y-4">
                             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                               <InfoBlock
-                                label="Employer"
-                                value={applicationPackage.job_posting.employer}
+                                label={t("workspace.results.employer")}
+                                value={
+                                  applicationPackage.job_posting.employer ||
+                                  t("common.states.notProvided")
+                                }
                               />
                               <InfoBlock
-                                label="Location"
-                                value={applicationPackage.job_posting.location}
+                                label={t("workspace.results.location")}
+                                value={
+                                  applicationPackage.job_posting.location ||
+                                  t("common.states.notProvided")
+                                }
                               />
                               <InfoBlock
-                                label="Employment type"
-                                value={applicationPackage.job_posting.employment_type}
+                                label={t("workspace.results.employmentType")}
+                                value={
+                                  applicationPackage.job_posting.employment_type ||
+                                  t("common.states.notProvided")
+                                }
                               />
                               <InfoBlock
-                                label="Language"
-                                value={applicationPackage.job_posting.language}
+                                label={t("workspace.results.language")}
+                                value={
+                                  applicationPackage.job_posting.language ||
+                                  t("common.states.notProvided")
+                                }
                               />
                             </div>
                             <TextBlock
-                              label="Summary"
+                              label={t("workspace.results.summary")}
                               value={applicationPackage.job_posting.summary}
                             />
                             <div className="grid gap-5 md:grid-cols-2">
                               <BulletSection
-                                title="Requirements"
+                                title={t("workspace.results.requirements")}
                                 items={applicationPackage.job_posting.requirements}
                               />
                               <BulletSection
-                                title="Missing information"
+                                title={t("workspace.results.missingInformation")}
                                 items={applicationPackage.job_posting.missing_information}
                               />
                             </div>
@@ -282,43 +541,109 @@ export function ApplicationWorkspace() {
   );
 }
 
-function buildPayload(values: WorkspaceFormValues): PrepareApplicationBasePayload {
-  const candidateProfile: CandidateProfilePayload = {
-    full_name: values.full_name.trim(),
-  };
+async function runWorkspaceFlow({
+  values,
+  setParsedJob,
+  setApplicationPackage,
+  setErrorMessage,
+  setCurrentStep,
+  fallbackErrorMessage,
+  options,
+}: {
+  values: WorkspaceFormValues;
+  setParsedJob: (value: ParsedJobResponse | null) => void;
+  setApplicationPackage: (value: ApplicationPackageResponse | null) => void;
+  setErrorMessage: (value: string | null) => void;
+  setCurrentStep: (value: WorkflowStep) => void;
+  fallbackErrorMessage: string;
+  options?: RunWorkspaceFlowOptions;
+}) {
+  setErrorMessage(null);
+  setParsedJob(null);
+  setApplicationPackage(null);
 
-  const summary = values.summary.trim();
-  const skills = splitCsv(values.skills);
-  const desiredRoles = splitCsv(values.desired_roles);
-  const desiredLocations = splitCsv(values.desired_locations);
-  const languages = splitCsv(values.languages);
+  try {
+    const payloadBase = buildPayload(values);
+    const rawJobText = values.raw_job_text.trim();
+    const jobUrl = values.job_url.trim();
 
-  if (summary) {
-    candidateProfile.summary = summary;
+    if (rawJobText) {
+      if (options?.allowJobContentOnly && !hasCandidateProfile(values)) {
+        setCurrentStep("idle");
+        return;
+      }
+
+      setCurrentStep("preparing");
+      const prepared = await prepareApplication({
+        ...payloadBase,
+        raw_text: rawJobText,
+        source_url: jobUrl || undefined,
+      });
+      setApplicationPackage(prepared);
+      setCurrentStep("done");
+      return;
+    }
+
+    setCurrentStep("parsing");
+    const parsed = await parseJob(jobUrl);
+    setParsedJob(parsed);
+
+    if (options?.allowJobContentOnly && !hasCandidateProfile(values)) {
+      setCurrentStep("idle");
+      return;
+    }
+
+    setCurrentStep("preparing");
+    const prepared = await prepareApplication({
+      ...payloadBase,
+      raw_text: parsed.raw_text,
+      source_url: parsed.source_url,
+    });
+    setApplicationPackage(prepared);
+    setCurrentStep("done");
+  } catch (error) {
+    setCurrentStep("idle");
+    setErrorMessage(
+      error instanceof Error ? error.message : fallbackErrorMessage,
+    );
   }
-  if (skills.length) {
-    candidateProfile.skills = skills;
-  }
-  if (desiredRoles.length) {
-    candidateProfile.desired_roles = desiredRoles;
-  }
-  if (desiredLocations.length) {
-    candidateProfile.desired_locations = desiredLocations;
-  }
-  if (languages.length) {
-    candidateProfile.languages = languages;
-  }
+}
+
+function hasCandidateProfile(values: WorkspaceFormValues) {
+  return Boolean(values.full_name.trim());
+}
+
+type WorkspacePrefill = {
+  jobUrl: string;
+  rawJobText: string;
+  autoRunKey: string | null;
+};
+
+function buildWorkspacePrefill({
+  jobUrl,
+  rawJobText,
+}: {
+  jobUrl: string;
+  rawJobText: string;
+}): WorkspacePrefill {
+  const normalizedJobUrl = jobUrl.trim();
+  const normalizedRawJobText = rawJobText.trim();
+  const autoRunKey =
+    normalizedJobUrl || normalizedRawJobText
+      ? `prefill:${normalizedJobUrl}:${normalizedRawJobText}`
+      : null;
 
   return {
-    candidate_profile: candidateProfile,
+    jobUrl: normalizedJobUrl,
+    rawJobText: normalizedRawJobText,
+    autoRunKey,
   };
 }
 
-function splitCsv(value: string) {
-  return value
-    .split(",")
-    .map((item) => item.trim())
-    .filter(Boolean);
+function buildPayload(values: WorkspaceFormValues): PrepareApplicationBasePayload {
+  return {
+    candidate_profile: workspaceValuesToCandidateProfilePayload(values),
+  };
 }
 
 function InfoBlock({
@@ -356,6 +681,8 @@ function TextBlock({ label, value }: { label: string; value: string }) {
 }
 
 function BulletSection({ title, items }: { title: string; items: string[] }) {
+  const { t } = useI18n();
+
   return (
     <div className="space-y-3">
       <h4 className="text-sm font-semibold text-slate-900">{title}</h4>
@@ -368,7 +695,7 @@ function BulletSection({ title, items }: { title: string; items: string[] }) {
           ))}
         </ul>
       ) : (
-        <p className="text-sm text-slate-500">None.</p>
+        <p className="text-sm text-slate-500">{t("common.states.none")}</p>
       )}
     </div>
   );

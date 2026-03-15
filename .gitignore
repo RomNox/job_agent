@@ -6,4 +6,5 @@ __pycache__/
 *.pyc
 frontend/.next/
 frontend/node_modules/
+data/*.sqlite3
 .DS_Store
