@@ -2,12 +2,19 @@
 
 import Link from "next/link";
 
+import { useAuth } from "@/components/auth/auth-provider";
 import { useI18n } from "@/components/i18n/locale-provider";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export function CTASection() {
   const { t } = useI18n();
+  const { status } = useAuth();
+  const primaryHref = status === "authenticated" ? "/workspace" : "/signup";
+  const primaryLabel =
+    status === "authenticated"
+      ? t("common.actions.openJobAgent")
+      : t("common.actions.signUp");
 
   return (
     <section className="border-b border-slate-200">
@@ -28,31 +35,22 @@ export function CTASection() {
 
             <div className="flex flex-col gap-3 sm:flex-row">
               <Link
-                href="/signup"
+                href={primaryHref}
                 className={cn(
                   buttonVariants({ size: "lg" }),
                   "bg-white text-slate-950 hover:bg-slate-200",
                 )}
               >
-                {t("common.actions.signUp")}
+                {primaryLabel}
               </Link>
               <Link
-                href="/login"
+                href="/#pricing"
                 className={cn(
                   buttonVariants({ variant: "secondary", size: "lg" }),
                   "border-slate-700 bg-transparent text-white hover:bg-slate-900",
                 )}
               >
-                {t("common.actions.logIn")}
-              </Link>
-              <Link
-                href="/search"
-                className={cn(
-                  buttonVariants({ variant: "ghost", size: "lg" }),
-                  "text-white hover:bg-slate-900",
-                )}
-              >
-                {t("common.actions.openSearch")}
+                {t("pricing.page.planCta")}
               </Link>
             </div>
           </div>

@@ -6,7 +6,7 @@ export function ProductPreviewSection() {
   const { messages, t } = useI18n();
 
   return (
-    <section className="border-b border-slate-200">
+    <section id="product" className="border-b border-slate-200 scroll-mt-24">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-18">
         <div className="max-w-2xl space-y-3">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">

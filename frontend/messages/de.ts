@@ -1,7 +1,7 @@
 export const de = {
   common: {
     brandName: "Job Agent",
-    marketLabel: "Deutschland",
+    marketLabel: "Germany",
     localeLabels: {
       de: "DE",
       en: "EN",
@@ -19,6 +19,7 @@ export const de = {
       search: "Suche",
       workspace: "Assistent",
       profile: "Profil",
+      pricing: "Tarife",
       onboarding: "Onboarding",
       product: "Produkt",
       workflow: "Ablauf",
@@ -40,6 +41,8 @@ export const de = {
       reviewSetup: "Kontext ansehen",
       continueToWorkspace: "Zum Assistenten",
       openJobSearch: "Jobsuche öffnen",
+      openJobAgent: "Job Agent öffnen",
+      openDemo: "Demo öffnen",
     },
     states: {
       loading: "Lädt...",
@@ -125,156 +128,191 @@ export const de = {
       authUnavailable: "Authentifizierung derzeit nicht verfügbar",
     },
     hero: {
-      eyebrow: "Persönlicher Job-Assistent",
+      eyebrow: "Job Agent",
       title:
-        "Für deinen nächsten Schritt in Deutschland.",
+        "Persönlicher Assistent für die Jobsuche in Deutschland",
       description:
-        "Job Agent behält deinen Kontext, prüft Stellen und begleitet dich vom Profil bis zur Bewerbung.",
+        "Job Agent arbeitet mit Stellenanzeigen so, wie Karriereberater es tun: passende Rollen finden, Anforderungen des Arbeitgebers analysieren, den Lebenslauf anpassen, Bewerbungsunterlagen vorbereiten und dich durch den Prozess begleiten, damit du die Stelle bekommst, die du wirklich willst und danach auf dem Arbeitsmarkt gefragt bleibst und deine Karriere erfolgreich weiterentwickelst.",
       supporting:
         "Profil, Suche und Bewerbung in einem ruhigen Verlauf.",
+      process: "Profil → Suche → Analyse → Bewerbung",
+      termsPrefix: "Mehr zu Nutzung und Rahmenbedingungen in den",
       openWorkspace: "Assistent öffnen",
-      previewEyebrow: "Im Einsatz",
+      previewEyebrow: "Job Agent",
       previewTitle:
-        "Dein persönlicher Assistent behält den Faden.",
+        "So hilft dein persönlicher Berater:",
       previewPanels: [
         {
-          label: "Kontext",
-          title: "Dein Kontext",
-          detail: "Rollen, Erfahrung und Präferenzen bleiben greifbar.",
+          label: "Stellen",
+          title: "Passende Stellen finden",
+          detail:
+            "Wählt relevante Stellen aus und schlägt Optionen vor, die zu deiner Erfahrung und deinen Karrierezielen passen.",
         },
         {
-          label: "Suche",
-          title: "Passende Rollen",
-          detail: "Finden, auswählen und direkt weitergeben.",
+          label: "Unterlagen",
+          title: "Unterlagen vorbereiten",
+          detail:
+            "Wir helfen dabei, Lebenslauf und Anschreiben für eine Bewerbung vorzubereiten.",
         },
         {
-          label: "Schritt",
-          title: "Nächster Schritt",
-          detail: "Stelle prüfen und Bewerbung vorbereiten.",
+          label: "Interview",
+          title: "Durch das Interview gehen",
+          detail:
+            "Wir helfen bei der Vorbereitung auf das Vorstellungsgespräch und dabei, den nächsten Schritt im Bewerbungsprozess sicher zu gehen.",
+        },
+        {
+          label: "Kompetenzen",
+          title: "Am Arbeitsmarkt relevant bleiben",
+          detail:
+            "Wir helfen dabei, Profil und berufliche Kompetenzen aktuell zu halten.",
         },
       ],
     },
     productPreview: {
-      eyebrow: "Dein Weg",
+      eyebrow: "Job Agent",
       title:
-        "Ein klarer Weg statt loser Einzelschritte.",
+        "Wir zeigen den Weg zu deinem neuen Job",
       description:
-        "Job Agent verbindet dein Profil mit jeder Stelle, damit Entscheidungen und nächste Schritte zusammenbleiben.",
+        "Job Agent hilft dir, jede Phase der Jobsuche Schritt für Schritt zu durchlaufen – von der Auswahl passender Stellen bis zum Angebot.",
       blocks: [
         {
           step: "01",
-          title: "Profil setzen",
-          description: "Sag dem Assistenten, wonach du suchst.",
+          title: "Registriere dich",
+          description:
+            "Beantworte ein paar Fragen, damit Job Agent versteht, welche Arbeit du suchst.",
           route: "/workspace",
         },
         {
           step: "02",
-          title: "Jobs auswählen",
-          description: "Suche Rollen und übernimm interessante Treffer.",
+          title: "Folge den Schritten",
+          description:
+            "Job Agent schlägt passende Stellen vor, hilft bei der Vorbereitung der Unterlagen und zeigt, wie du den gewünschten Job bekommst.",
           route: "/search",
         },
         {
           step: "03",
-          title: "Stellen klären",
-          description: "Verstehe Anforderungen, Signale und offene Punkte.",
+          title: "Erhalte den Job",
+          description:
+            "Job Agent hilft dir, dich auf das Interview vorzubereiten, es zu durchlaufen und ein Jobangebot zu erhalten.",
           route: "/search/resolve-job",
         },
         {
           step: "04",
-          title: "Bewerbung vorbereiten",
-          description: "Gehe mit Entwurf, CV-Hinweisen und Checkliste weiter.",
+          title: "Entwickle deine Karriere weiter",
+          description:
+            "Job Agent hilft dir, dich auf das Interview vorzubereiten, es erfolgreich zu bestehen und den gewünschten Job zu bekommen.",
           route: "/applications/prepare",
         },
       ],
     },
     howItWorks: {
-      eyebrow: "So begleitet dich Job Agent",
+      eyebrow: "Dein Karriere-Assistent",
       title:
-        "Weniger Reibung im Bewerbungsprozess.",
+        "Wie Job Agent dir hilft",
       description:
-        "Dein Assistent hält Profil, Stelle und nächste Schritte zusammen.",
+        "Job Agent organisiert deinen gesamten Bewerbungsprozess persönlich: passende Stellen finden, Unterlagen vorbereiten und den nächsten Schritt zeigen, damit du dich auf das Ergebnis konzentrieren kannst.",
       steps: [
         {
-          title: "Profil und Ziel setzen",
-          description: "So bekommt jede Suche sofort Richtung.",
-        },
-        {
-          title: "Rolle auswählen",
-          description: "Über Suche oder direkt per URL.",
-        },
-        {
-          title: "Stelle mit Assistenz prüfen",
-          description: "Anforderungen, Chancen und Lücken werden klarer.",
-        },
-        {
-          title: "Nächsten Schritt vorbereiten",
+          title: "Passende Stellen finden",
           description:
-            "Passung, Anschreiben, CV-Hinweise und Checkliste bleiben verbunden.",
+            "Job Agent findet relevante Stellen und schlägt Optionen vor, die zu deiner Erfahrung und deinen Karrierezielen passen.",
+        },
+        {
+          title: "Unterlagen anpassen",
+          description:
+            "Lebenslauf und Anschreiben werden für jede Stelle unter Berücksichtigung deiner Erfahrung und der Anforderungen des Arbeitgebers angepasst.",
+        },
+        {
+          title: "Auf Interviews vorbereiten",
+          description:
+            "Wenn eine Stelle das Interesse des Arbeitgebers weckt, hilft dir Job Agent bei der Vorbereitung auf den nächsten Schritt und dabei, den Bewerbungsprozess sicher zu durchlaufen.",
+        },
+        {
+          title: "Bewerbungen kontrollieren",
+          description:
+            "Alle versendeten Bewerbungen werden an einem Ort gespeichert, damit du den Prozess verfolgen und keine Chance verpassen kannst.",
         },
       ],
     },
     features: {
-      eyebrow: "Was dein Assistent übernimmt",
-      title: "Klarheit für Suche und Bewerbung.",
+      eyebrow: "Tools von Job Agent",
+      title: "Intelligente Werkzeuge für die Jobsuche",
       description:
-        "Konzentriert auf die Punkte, an denen Entscheidungen zählen.",
+        "Job Agent vereint Stellenanalyse, Personalisierung von Unterlagen und Bewerbungsmanagement in einem Arbeitsbereich und hilft dir, schneller und präziser zu entscheiden.",
       items: [
         {
-          title: "Gespeicherter Kontext",
-          description: "Ein Kontext, den dein Assistent behält.",
+          title: "Stellenanalyse",
+          description:
+            "Extrahiert automatisch die wichtigsten Anforderungen, Fähigkeiten und Erwartungen des Arbeitgebers.",
         },
         {
-          title: "Assistierte Jobsuche",
-          description: "Passende Rollen schneller auswählen.",
+          title: "Match Score",
+          description:
+            "Zeigt, wie gut eine Stelle zu deinem Profil passt und wo Lücken bestehen.",
         },
         {
-          title: "Stellenprüfung",
-          description: "Anzeigen in klare Signale übersetzen.",
+          title: "Gap Analysis",
+          description:
+            "Ermittelt Fähigkeiten und Anforderungen, die für diese Rolle noch fehlen.",
         },
         {
-          title: "Passung",
-          description: "Stärken, Lücken und Richtung sichtbar machen.",
+          title: "Unterlagen vorbereiten",
+          description:
+            "Passt Lebenslauf und Anschreiben an eine konkrete Stelle an.",
         },
         {
-          title: "Anschreiben-Entwurf",
-          description: "Ein erster Entwurf mit echtem Kontext.",
+          title: "Bewerbungs-Checkliste",
+          description:
+            "Erstellt eine Liste dessen, was vor dem Absenden vorbereitet werden sollte.",
         },
         {
-          title: "CV-Anpassung",
-          description: "Den CV gezielt auf die Rolle ausrichten.",
+          title: "Bewerbungstracker",
+          description:
+            "Verfolgt alle eingereichten Bewerbungen und die Prozessschritte.",
         },
         {
-          title: "Nächste Schritte",
-          description: "Mit einer klaren Checkliste weitergehen.",
+          title: "Plan für die nächsten Schritte",
+          description:
+            "Zeigt, welche Handlungen deine Chancen auf den Job erhöhen können.",
+        },
+        {
+          title: "Interviewvorbereitung",
+          description:
+            "Hilft bei der Vorbereitung auf Fragen und Erwartungen des Arbeitgebers.",
+        },
+        {
+          title: "Career Strategy",
+          description:
+            "Hilft zu verstehen, welche Fähigkeiten du entwickeln und welche Stellen besser zu dir passen.",
         },
       ],
     },
     germany: {
-      eyebrow: "Deutschland im Fokus",
+      eyebrow: "Job Agent",
       title:
-        "Für die Jobsuche in Deutschland gebaut.",
+        "Für den deutschen Arbeitsmarkt gemacht",
       description:
-        "Von IT-Rollen bis Ausbildung: Job Agent orientiert sich an typischen Abläufen, Anforderungen und Erwartungen des Marktes.",
+        "Job Agent wählt Stellen von deutschen Plattformen aus und berücksichtigt die Besonderheiten des lokalen Arbeitsmarkts. Der Service analysiert die Anforderungen der Arbeitgeber, hilft bei der Vorbereitung der Unterlagen im richtigen Format und zeigt eine Bewerbungsstrategie, die auf dem deutschen Markt üblich ist. So kannst du dich auf die Jobsuche konzentrieren und in jeder Phase des Bewerbungsprozesses sicherer handeln.",
       items: [
         {
-          title: "Deutschland zuerst",
+          title: "Stellen von deutschen Plattformen",
           description:
-            "Standorte, Arbeitsmodelle und Bewerbungslogik mit lokalem Fokus.",
+            "Job Agent wählt Stellen von beliebten deutschen Job-Plattformen und Aggregatoren aus.",
         },
         {
-          title: "IT & Ausbildung",
+          title: "Besonderheiten des deutschen Arbeitsmarkts",
           description:
-            "Geeignet für Fachrollen, Ausbildung und frühe Karrierewege.",
+            "Stellenanalyse und Empfehlungen berücksichtigen die Erwartungen der Arbeitgeber und die Einstellungspraxis in Deutschland.",
         },
         {
-          title: "Klare Bewerbungslogik",
+          title: "Reguläre Stellen und Ausbildung",
           description:
-            "Aus Stelleninhalten werden konkrete nächste Schritte.",
+            "Geeignet sowohl für berufliche Positionen als auch für die Suche nach Ausbildung und den Karrierestart.",
         },
         {
-          title: "Wiederverwendbarer Kontext",
+          title: "Die richtige Bewerbungslogik",
           description:
-            "Dein Profil bleibt für spätere Suche und Bewertung erhalten.",
+            "Job Agent hilft dabei, eine Bewerbung so vorzubereiten, wie Arbeitgeber es auf dem deutschen Markt erwarten.",
         },
       ],
     },
@@ -288,6 +326,169 @@ export const de = {
     footer: {
       description:
         "Persönlicher Job-Assistent für Jobsuche und Bewerbung in Deutschland.",
+    },
+  },
+  pricing: {
+    page: {
+      eyebrow: "Tarife",
+      title: "Wähle den passenden Plan für deine Jobsuche mit AI-Unterstützung.",
+      description:
+        "Alle Pläne enthalten das Kandidatenprofil, Jobsuche und Workspace. Der Unterschied liegt in der Tiefe der AI-Unterstützung und in der Anzahl der Stellenanalysen pro Monat.",
+      periods: [
+        { key: "threeMonths", label: "3 Monate" },
+        { key: "sixMonths", label: "6 Monate" },
+        { key: "twelveMonths", label: "12 Monate" },
+      ],
+      recommended: "Empfohlen",
+      mostPopular: "Am beliebtesten",
+      priceCaption: "für {period}",
+      planCta: "Plan wählen",
+      plans: [
+        {
+          name: "Starter",
+          description: "Für die erste Phase der Jobsuche.",
+          analysisLimit: "20 Stellenanalysen / Monat",
+          recommended: false,
+          features: [
+            "AI-Stellenanalyse",
+            "Kandidatenprofil",
+            "Jobsuche",
+            "Basis-Workspace",
+          ],
+          prices: {
+            threeMonths: "39 €",
+            sixMonths: "69 €",
+            twelveMonths: "119 €",
+          },
+        },
+        {
+          name: "Pro",
+          description: "Ideal für aktive Jobsuchende.",
+          analysisLimit: "50 Stellenanalysen / Monat",
+          recommended: true,
+          features: [
+            "AI-Stellenanalyse",
+            "CV-Anpassung",
+            "Anschreiben generieren",
+            "Gespeicherte Jobs",
+            "Erweiterter Workspace",
+          ],
+          prices: {
+            threeMonths: "99 €",
+            sixMonths: "179 €",
+            twelveMonths: "329 €",
+          },
+        },
+        {
+          name: "Agent",
+          description: "Für intensive, AI-gestützte Jobsuche.",
+          analysisLimit: "120 Stellenanalysen / Monat",
+          recommended: false,
+          features: [
+            "Vollständiger AI-Analyse-Workflow",
+            "CV + Anschreiben",
+            "Bewerbungsvorbereitung",
+            "Bewerbungstracking",
+            "Erweiterter Workspace",
+          ],
+          prices: {
+            threeMonths: "229 €",
+            sixMonths: "399 €",
+            twelveMonths: "699 €",
+          },
+        },
+      ],
+      creditsNote:
+        "Wenn dein Analyse-Limit aufgebraucht ist, können zusätzliche Credits später separat im Account gekauft werden.",
+    },
+  },
+  legal: {
+    terms: {
+      linkLabel: "Nutzungsbedingungen",
+      eyebrow: "Rechtliches",
+      title: "Nutzungsbedingungen",
+      description:
+        "Ein kurzer Überblick über die aktuellen Nutzungsbedingungen von Job Agent.",
+      notice:
+        "Dies ist eine kompakte Produktfassung. Eine ausführlichere rechtliche Version kann später ergänzt werden.",
+      sections: [
+        {
+          title: "Verantwortliche Nutzung",
+          body: "Nutze Job Agent nur für rechtmäßige Bewerbungszwecke und nur mit Inhalten, die du selbst verwenden darfst.",
+        },
+        {
+          title: "Eigene Verantwortung",
+          body: "Du prüfst Lebenslauf, Anschreiben, Analysen und andere Inhalte vor der Verwendung selbst, bevor du sie an Arbeitgeber weitergibst.",
+        },
+        {
+          title: "Keine Einstellungszusage",
+          body: "Job Agent unterstützt bei Suche und Vorbereitung, garantiert aber weder Antworten von Arbeitgebern noch eine Einstellung.",
+        },
+        {
+          title: "Produktänderungen",
+          body: "Funktionen, Limits und Verfügbarkeit können sich weiterentwickeln, während das Produkt ausgebaut wird.",
+        },
+      ],
+    },
+  },
+  demo: {
+    page: {
+      eyebrow: "Demo",
+      title: "Sieh dir Job Agent vor der Registrierung in Ruhe an.",
+      description:
+        "Diese read-only Demo zeigt, wie der Workspace aussieht und wie Profil, Suche, Analyse und Bewerbung in einem Produktfluss zusammenkommen.",
+      readOnlyLabel: "Read-only Demo",
+      readOnlyDescription:
+        "Die Demo sendet keine AI-Anfragen und speichert keine Daten. Sie ist nur zur Orientierung im Interface gedacht.",
+      columns: [
+        {
+          label: "Kandidatenprofil",
+          title: "Profile setup",
+          description: "Der Ausgangspunkt für Richtung, Kontext und Suchsignale.",
+          items: [
+            {
+              title: "Zielrolle und Markt",
+              detail: "Python Developer in Berlin mit Fokus auf deutschsprachige Produktteams.",
+            },
+            {
+              title: "Erfahrung und Stärken",
+              detail: "Backend, APIs, Datenarbeit und klare Kommunikation mit Hiring-Teams.",
+            },
+          ],
+        },
+        {
+          label: "Jobsuche",
+          title: "Job search",
+          description: "Suchergebnisse und priorisierte Rollen bleiben nah am Kandidatenkontext.",
+          items: [
+            {
+              title: "Longlist der Rollen",
+              detail: "Mehrere Backend- und Platform-Rollen werden gesammelt und verglichen.",
+            },
+            {
+              title: "Nächste starke Option",
+              detail: "Die interessanteste Rolle wird für die Analyse in den Workspace übernommen.",
+            },
+          ],
+        },
+        {
+          label: "Vorbereitung",
+          title: "Application preparation",
+          description: "Analyse, CV-Anpassung und nächste Schritte bleiben in einem ruhigen Ablauf.",
+          items: [
+            {
+              title: "Job analysis",
+              detail: "Anforderungen, offene Punkte und Passung werden in einer strukturierten Sicht gezeigt.",
+            },
+            {
+              title: "Bewerbungspaket",
+              detail: "Hinweise für CV, Anschreiben und Vorbereitung auf den nächsten Schritt.",
+            },
+          ],
+        },
+      ],
+      footerNote:
+        "Nach der Registrierung wird derselbe Workspace interaktiv: Du kannst echte Analysen starten, Inhalte speichern und Bewerbungen vorbereiten.",
     },
   },
   auth: {

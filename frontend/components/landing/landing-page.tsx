@@ -5,6 +5,7 @@ import { HeroSection } from "@/components/landing/hero-section";
 import { LandingFooter } from "@/components/landing/landing-footer";
 import { LandingHeader } from "@/components/landing/landing-header";
 import { HowItWorksSection } from "@/components/landing/how-it-works-section";
+import { PricingSection } from "@/components/landing/pricing-section";
 import { ProductPreviewSection } from "@/components/landing/product-preview-section";
 
 export function LandingPage() {
@@ -17,6 +18,7 @@ export function LandingPage() {
         <HowItWorksSection />
         <FeaturesSection />
         <GermanyFocusSection />
+        <PricingSection />
         <CTASection />
       </main>
       <LandingFooter />

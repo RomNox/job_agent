@@ -14,9 +14,9 @@ export function LandingHeader() {
   const { t } = useI18n();
   const [isLoggingOut, startTransition] = useTransition();
   const navigationItems = [
-    { href: "#how-it-works", label: t("common.navigation.howItWorks") },
-    { href: "#features", label: t("common.navigation.features") },
-    { href: "#germany", label: t("common.navigation.germany") },
+    { href: "/#product", label: t("common.navigation.howItWorks") },
+    { href: "/#features", label: t("common.navigation.features") },
+    { href: "/#pricing", label: t("common.navigation.pricing") },
   ];
 
   function handleLogout() {
@@ -28,7 +28,7 @@ export function LandingHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-30 border-b border-slate-200/80 bg-white/95 backdrop-blur">
+    <header className="sticky top-0 z-30 border-b border-slate-200/80 bg-white/75 backdrop-blur-xl supports-[backdrop-filter]:bg-white/72">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3.5 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-2xl border border-slate-300 text-sm font-semibold text-slate-950">
@@ -38,7 +38,7 @@ export function LandingHeader() {
             <p className="text-sm font-semibold tracking-tight text-slate-950">
               {t("common.brandName")}
             </p>
-            <p className="hidden text-xs uppercase tracking-[0.16em] text-slate-500 sm:block">
+            <p className="text-xs uppercase tracking-[0.16em] text-slate-500">
               {t("common.marketLabel")}
             </p>
           </div>
@@ -62,13 +62,10 @@ export function LandingHeader() {
             <>
               <Link
                 href="/profile"
-                className="hidden text-sm font-medium text-slate-600 transition-colors hover:text-slate-950 md:inline-flex"
+                className="inline-flex max-w-[10.5rem] items-center rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 shadow-[0_1px_2px_rgba(15,23,42,0.04)] transition-colors hover:border-slate-300 hover:text-slate-950 sm:max-w-[13rem]"
               >
-                {t("common.navigation.profile")}
+                <span className="truncate">{user.full_name}</span>
               </Link>
-              <span className="hidden rounded-full border border-slate-200 px-3 py-1.5 text-sm text-slate-700 xl:inline-flex">
-                {user.full_name}
-              </span>
               <button
                 type="button"
                 onClick={handleLogout}

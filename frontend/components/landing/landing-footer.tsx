@@ -7,17 +7,13 @@ import { useI18n } from "@/components/i18n/locale-provider";
 export function LandingFooter() {
   const { t } = useI18n();
   const footerLinks = [
-    { href: "/search", label: t("common.navigation.search") },
-    { href: "/workspace", label: t("common.navigation.workspace") },
-    { href: "/login", label: t("common.actions.logIn") },
-    { href: "/signup", label: t("common.actions.signUp") },
-    { href: "#features", label: t("common.navigation.product") },
-    { href: "#how-it-works", label: t("common.navigation.workflow") },
-    { href: "#germany", label: t("common.navigation.germany") },
+    { href: "/#product", label: t("common.navigation.howItWorks") },
+    { href: "/#features", label: t("common.navigation.features") },
+    { href: "/#pricing", label: t("common.navigation.pricing") },
   ];
 
   return (
-    <footer className="bg-white">
+    <footer className="border-t border-black/5 bg-white/55 shadow-[0_-10px_40px_rgba(0,0,0,0.04)] backdrop-blur-[28px] supports-[backdrop-filter]:bg-white/55">
       <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-8 sm:px-6 lg:flex-row lg:items-end lg:justify-between lg:px-8">
         <div className="space-y-2">
           <p className="text-lg font-semibold tracking-tight text-slate-950">

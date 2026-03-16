@@ -16,6 +16,7 @@ export const en: DeepPartialMessages<Messages> = {
       search: "Search",
       workspace: "Assistant",
       profile: "Profile",
+      pricing: "Pricing",
       onboarding: "Onboarding",
       product: "Product",
       workflow: "Flow",
@@ -37,6 +38,8 @@ export const en: DeepPartialMessages<Messages> = {
       reviewSetup: "Review context",
       continueToWorkspace: "Go to assistant",
       openJobSearch: "Open job search",
+      openJobAgent: "Open Job Agent",
+      openDemo: "Open demo",
     },
     states: {
       loading: "Loading...",
@@ -117,154 +120,190 @@ export const en: DeepPartialMessages<Messages> = {
       authUnavailable: "Authentication unavailable",
     },
     hero: {
-      eyebrow: "Personal Job Assistant",
+      eyebrow: "Job Agent",
       title:
-        "For your next step in Germany.",
+        "Personal assistant for job search in Germany",
       description:
-        "Job Agent keeps your context, reviews vacancies, and guides you from profile to application.",
+        "Job Agent works with vacancies the way career consultants do: it helps you find relevant roles, analyze employer requirements, tailor your CV, prepare applications, and move through the hiring process so you can get the job you actually want, then stay relevant in the job market and continue developing your career successfully.",
       supporting: "Profile, search, review, and application in one calm flow.",
+      process: "profile → search → analysis → apply",
+      termsPrefix: "Read more about use and service conditions in the",
       openWorkspace: "Open assistant",
-      previewEyebrow: "In motion",
+      previewEyebrow: "Job Agent",
       previewTitle:
-        "Your personal assistant keeps the thread.",
+        "How your personal consultant helps:",
       previewPanels: [
         {
-          label: "Memory",
-          title: "Your context",
-          detail: "Roles, experience, and preferences stay in reach.",
+          label: "Vacancies",
+          title: "Find suitable vacancies",
+          detail:
+            "Selects relevant vacancies and suggests options aligned with your experience and career goals.",
         },
         {
-          label: "Search",
-          title: "Relevant roles",
-          detail: "Find them, choose them, move them forward.",
+          label: "Documents",
+          title: "Prepare documents",
+          detail:
+            "We help prepare your CV and cover letter for a job application.",
         },
         {
-          label: "Assist",
-          title: "Next move",
-          detail: "Review the role. Prepare the application.",
+          label: "Interview",
+          title: "Pass the interview",
+          detail:
+            "We help you prepare for interviews and confidently move through the next stage of hiring.",
+        },
+        {
+          label: "Skills",
+          title: "Stay relevant in the job market",
+          detail:
+            "We help keep your profile and professional skills current.",
         },
       ],
     },
     productPreview: {
-      eyebrow: "Your path",
+      eyebrow: "Job Agent",
       title:
-        "A clear path instead of disconnected steps.",
+        "Let's map the path to your new job",
       description:
-        "Job Agent keeps your profile connected to each vacancy so decisions and next steps stay together.",
+        "Job Agent helps you move through each stage of the job search, from choosing vacancies to receiving an offer.",
       blocks: [
         {
           step: "01",
-          title: "Set your profile",
-          description: "Tell the assistant what you are aiming for.",
+          title: "Sign up",
+          description:
+            "Answer a few questions so Job Agent can understand what kind of job you are looking for.",
           route: "/workspace",
         },
         {
           step: "02",
-          title: "Choose roles",
-          description: "Search and move strong matches forward.",
+          title: "Follow the guidance",
+          description:
+            "Job Agent suggests suitable vacancies, helps prepare documents, and shows how to get the job you want.",
           route: "/search",
         },
         {
           step: "03",
-          title: "Clarify the vacancy",
-          description: "See the requirements, signals, and open points.",
+          title: "Get the job",
+          description:
+            "Job Agent will help you prepare for the interview, go through it, and receive a job offer.",
           route: "/search/resolve-job",
         },
         {
           step: "04",
-          title: "Prepare the application",
-          description: "Continue with draft, CV guidance, and checklist.",
+          title: "Grow your career",
+          description:
+            "Job Agent will help you prepare for the interview, complete it successfully, and get the job you want.",
           route: "/applications/prepare",
         },
       ],
     },
     howItWorks: {
-      eyebrow: "How Job Agent guides you",
+      eyebrow: "Your career assistant",
       title:
-        "Less friction in the application process.",
+        "How Job Agent helps you",
       description:
-        "Your assistant keeps profile, vacancy, and next steps together.",
+        "Job Agent personally organizes your entire job search process: it selects suitable vacancies, helps prepare documents, and suggests the next step so you can focus on the result.",
       steps: [
         {
-          title: "Set profile and direction",
-          description: "Every search starts with sharper focus.",
+          title: "Find suitable vacancies",
+          description:
+            "Job Agent finds relevant vacancies and suggests options that match your experience and career goals.",
         },
         {
-          title: "Choose a role",
-          description: "Start from search or from a direct URL.",
+          title: "Adapt documents",
+          description:
+            "CVs and cover letters are adapted to each vacancy with your experience and the employer's requirements in mind.",
         },
         {
-          title: "Review with assistance",
-          description: "Requirements, gaps, and signals become clearer.",
+          title: "Prepare for interviews",
+          description:
+            "If a vacancy attracts the employer's interest, Job Agent helps you prepare for the next stage and move confidently through the hiring process.",
         },
         {
-          title: "Prepare the next move",
-          description: "Fit, letter, CV guidance, and checklist stay connected.",
+          title: "Control applications",
+          description:
+            "All submitted applications are stored in one place so you can track the process and not miss any opportunity.",
         },
       ],
     },
     features: {
-      eyebrow: "What your assistant handles",
-      title: "Clarity for search and applications.",
+      eyebrow: "Job Agent tools",
+      title: "Intelligent tools for job search",
       description:
-        "Focused on the moments where decisions matter most.",
+        "Job Agent brings together vacancy analysis, document personalization, and application management in one workspace, helping you make decisions faster and more accurately.",
       items: [
         {
-          title: "Assistant memory",
-          description: "One context layer your assistant keeps.",
+          title: "Job analysis",
+          description:
+            "Automatically extracts key requirements, skills, and employer expectations.",
         },
         {
-          title: "Assisted job search",
-          description: "Choose stronger roles faster.",
+          title: "Match Score",
+          description:
+            "Shows how well a vacancy matches your profile and where the gaps are.",
         },
         {
-          title: "Vacancy review",
-          description: "Turn job posts into clear signals.",
+          title: "Gap Analysis",
+          description:
+            "Identifies the skills and requirements missing for this role.",
         },
         {
-          title: "Fit",
-          description: "See strengths, gaps, and direction.",
+          title: "Document preparation",
+          description:
+            "Adapts your CV and cover letter to a specific vacancy.",
         },
         {
-          title: "Cover letter draft",
-          description: "A first draft with real context behind it.",
+          title: "Application checklist",
+          description:
+            "Creates a list of what should be prepared before sending an application.",
         },
         {
-          title: "CV guidance",
-          description: "Align your CV more clearly to the role.",
+          title: "Application tracker",
+          description:
+            "Tracks all submitted applications and the stages of the process.",
         },
         {
-          title: "Next steps",
-          description: "Move forward with a clear checklist.",
+          title: "Next steps plan",
+          description:
+            "Suggests the actions that can increase your chances of getting the job.",
+        },
+        {
+          title: "Interview preparation",
+          description:
+            "Helps you prepare for employer questions and expectations.",
+        },
+        {
+          title: "Career Strategy",
+          description:
+            "Helps you understand which skills to develop and which vacancies fit best.",
         },
       ],
     },
     germany: {
-      eyebrow: "Germany in focus",
+      eyebrow: "Job Agent",
       title:
-        "Built for the job market in Germany.",
+        "Built for the German job market",
       description:
-        "From IT roles to Ausbildung, Job Agent follows the rhythms and expectations of the local market.",
+        "Job Agent selects vacancies from German platforms and takes the specifics of the local job market into account. The service analyzes employer requirements, helps prepare documents in the right format, and suggests an application strategy that fits German market expectations. This lets you focus on the job search and act more confidently at each stage of the hiring process.",
       items: [
         {
-          title: "Germany first",
+          title: "Vacancies from German platforms",
           description:
-            "Locations, work modes, and application logic stay locally grounded.",
+            "Job Agent selects vacancies from popular German job platforms and aggregators.",
         },
         {
-          title: "IT and Ausbildung",
+          title: "Specifics of the German job market",
           description:
-            "Useful for specialist roles, Ausbildung, and early-career paths.",
+            "Vacancy analysis and recommendations take employer expectations and hiring practices in Germany into account.",
         },
         {
-          title: "Clear application logic",
+          title: "Regular roles and Ausbildung",
           description:
-            "Turn vacancy content into practical next moves.",
+            "Suitable both for professional positions and for finding Ausbildung opportunities and starting a career.",
         },
         {
-          title: "Reusable context",
+          title: "The right application logic",
           description:
-            "Your profile stays ready for later search and review.",
+            "Job Agent helps prepare an application the way employers expect on the German market.",
         },
       ],
     },
@@ -278,6 +317,169 @@ export const en: DeepPartialMessages<Messages> = {
     footer: {
       description:
         "Personal job assistant for job search and applications in Germany.",
+    },
+  },
+  pricing: {
+    page: {
+      eyebrow: "Pricing",
+      title: "Choose the right plan for your AI-assisted job search.",
+      description:
+        "All plans include the candidate profile, job search, and workspace. They differ by the depth of AI assistance and by the number of job analyses available each month.",
+      periods: [
+        { key: "threeMonths", label: "3 months" },
+        { key: "sixMonths", label: "6 months" },
+        { key: "twelveMonths", label: "12 months" },
+      ],
+      recommended: "Recommended",
+      mostPopular: "Most popular",
+      priceCaption: "for {period}",
+      planCta: "Choose plan",
+      plans: [
+        {
+          name: "Starter",
+          description: "For the first stage of job search.",
+          analysisLimit: "20 job analyses / month",
+          recommended: false,
+          features: [
+            "AI job analysis",
+            "candidate profile",
+            "job search",
+            "basic workspace",
+          ],
+          prices: {
+            threeMonths: "39 €",
+            sixMonths: "69 €",
+            twelveMonths: "119 €",
+          },
+        },
+        {
+          name: "Pro",
+          description: "Best for active job seekers.",
+          analysisLimit: "50 job analyses / month",
+          recommended: true,
+          features: [
+            "AI job analysis",
+            "CV tailoring",
+            "cover letter generation",
+            "saved jobs",
+            "improved workspace",
+          ],
+          prices: {
+            threeMonths: "99 €",
+            sixMonths: "179 €",
+            twelveMonths: "329 €",
+          },
+        },
+        {
+          name: "Agent",
+          description: "For intensive AI-assisted job search.",
+          analysisLimit: "120 job analyses / month",
+          recommended: false,
+          features: [
+            "full AI analysis workflow",
+            "CV + cover letter",
+            "application preparation",
+            "application tracking",
+            "advanced workspace",
+          ],
+          prices: {
+            threeMonths: "229 €",
+            sixMonths: "399 €",
+            twelveMonths: "699 €",
+          },
+        },
+      ],
+      creditsNote:
+        "If your analysis limit runs out, additional credits can be purchased separately inside the account later.",
+    },
+  },
+  legal: {
+    terms: {
+      linkLabel: "Terms of Use",
+      eyebrow: "Legal",
+      title: "Terms of Use",
+      description:
+        "A short overview of the current usage conditions for Job Agent.",
+      notice:
+        "This is a compact product-level summary. A fuller legal version can be added later.",
+      sections: [
+        {
+          title: "Responsible use",
+          body: "Use Job Agent only for lawful job-search purposes and only with content you have the right to use.",
+        },
+        {
+          title: "Your review responsibility",
+          body: "You remain responsible for reviewing CVs, cover letters, analyses, and other materials before sending them to employers.",
+        },
+        {
+          title: "No hiring guarantee",
+          body: "Job Agent supports search and preparation, but it does not guarantee employer responses, interviews, or hiring outcomes.",
+        },
+        {
+          title: "Product changes",
+          body: "Features, limits, and availability may evolve as the product continues to develop.",
+        },
+      ],
+    },
+  },
+  demo: {
+    page: {
+      eyebrow: "Demo",
+      title: "Explore Job Agent before creating an account.",
+      description:
+        "This read-only demo shows how the workspace looks and how profile, search, analysis, and application prep stay connected in one product flow.",
+      readOnlyLabel: "Read-only demo",
+      readOnlyDescription:
+        "The demo does not send AI requests and does not save data. It exists only to show the interface and workflow.",
+      columns: [
+        {
+          label: "Candidate profile",
+          title: "Profile setup",
+          description: "The starting point for direction, context, and search signals.",
+          items: [
+            {
+              title: "Target role and market",
+              detail: "Python Developer in Berlin with a focus on German-speaking product teams.",
+            },
+            {
+              title: "Experience and strengths",
+              detail: "Backend work, APIs, data tasks, and clear communication with hiring teams.",
+            },
+          ],
+        },
+        {
+          label: "Job search",
+          title: "Job search",
+          description: "Search results and prioritized roles stay close to the candidate context.",
+          items: [
+            {
+              title: "Role shortlist",
+              detail: "Several backend and platform roles are collected and compared.",
+            },
+            {
+              title: "Next strong option",
+              detail: "The most relevant role is moved into the workspace for analysis.",
+            },
+          ],
+        },
+        {
+          label: "Preparation",
+          title: "Application preparation",
+          description: "Analysis, CV work, and next steps stay in one calm flow.",
+          items: [
+            {
+              title: "Job analysis",
+              detail: "Requirements, open points, and fit are shown in a structured view.",
+            },
+            {
+              title: "Application package",
+              detail: "Guidance for CV, cover letter, and preparation for the next step.",
+            },
+          ],
+        },
+      ],
+      footerNote:
+        "After sign-up, the same workspace becomes interactive: you can run real analyses, save context, and prepare applications.",
     },
   },
   auth: {
