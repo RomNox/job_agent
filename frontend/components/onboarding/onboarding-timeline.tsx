@@ -1,70 +1,87 @@
 "use client";
 
-import { useI18n } from "@/components/i18n/locale-provider";
-import { ONBOARDING_STAGES, getStageStatus } from "@/lib/onboarding";
+import type { CSSProperties } from "react";
+
 import { cn } from "@/lib/utils";
-import type { OnboardingStateResponse } from "@/types/api";
+
+type TimelineStep = {
+  id: string;
+  label: string;
+};
 
 type OnboardingTimelineProps = {
-  onboardingState: Pick<
-    OnboardingStateResponse,
-    "current_step" | "furthest_step" | "completed"
-  >;
-  isBusy: boolean;
-  onSelectStage: (index: number) => void;
+  steps: readonly TimelineStep[];
+  currentStep: number;
+  isBusy?: boolean;
+  onSelectStep?: (index: number) => void;
+  className?: string;
 };
 
 export function OnboardingTimeline({
-  onboardingState,
-  isBusy,
-  onSelectStage,
+  steps,
+  currentStep,
+  isBusy = false,
+  onSelectStep,
+  className,
 }: OnboardingTimelineProps) {
-  const { messages } = useI18n();
+  const axisStyle = {
+    "--timeline-axis": "0.875rem",
+  } as CSSProperties;
 
   return (
-    <div className="relative pl-10">
-      <div className="absolute left-4 top-4 h-[calc(100%-16px)] w-px bg-gradient-to-b from-slate-950 via-slate-300 to-white" />
-      <div className="space-y-5">
-        {ONBOARDING_STAGES.map((stageMeta, index) => {
-          const stage = messages.onboarding.stages[index];
-          const status = getStageStatus(index, onboardingState);
-          const isLocked = status === "locked";
+    <div className={cn("relative", className)} style={axisStyle}>
+      <div className="pointer-events-none absolute inset-y-1 left-[var(--timeline-axis)] w-px -translate-x-1/2 bg-[linear-gradient(to_bottom,rgba(255,255,255,0),rgba(148,163,184,0.34)_10%,rgba(148,163,184,0.4)_50%,rgba(148,163,184,0.3)_90%,rgba(255,255,255,0))]" />
+      <div className="space-y-4">
+        {steps.map((step, index) => {
+          const status =
+            index < currentStep
+              ? "completed"
+              : index === currentStep
+                ? "current"
+                : "upcoming";
+          const isCurrent = status === "current";
 
           return (
             <button
-              key={stageMeta.id}
+              key={step.id}
               type="button"
-              onClick={() => onSelectStage(index)}
-              disabled={isLocked || isBusy}
+              aria-current={isCurrent ? "step" : undefined}
+              onClick={() => onSelectStep?.(index)}
+              disabled={isBusy}
               className={cn(
-                "group relative block w-full text-left transition-opacity",
-                isLocked ? "cursor-not-allowed opacity-50" : "hover:opacity-100",
+                "group relative block min-h-9 w-full pl-10 text-left transition-opacity duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300/70 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60",
+                !isBusy && "hover:opacity-100",
               )}
             >
               <span
                 className={cn(
-                  "absolute -left-10 top-1.5 block rounded-full border transition-all",
-                  status === "current" &&
-                    "h-4 w-4 border-slate-950 bg-slate-950 shadow-[0_0_0_6px_rgba(15,23,42,0.06)]",
-                  status === "completed" && "h-3 w-3 border-slate-950 bg-slate-950",
-                  status === "available" && "h-3 w-3 border-slate-400 bg-white",
-                  status === "locked" && "h-3 w-3 border-slate-200 bg-white",
+                  "absolute left-[var(--timeline-axis)] top-4 flex h-4 w-4 -translate-x-1/2 -translate-y-1/2 items-center justify-center",
                 )}
-              />
-              <div className="space-y-1">
-                <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-slate-400">
-                  {stage.eyebrow}
-                </p>
-                <p
+              >
+                <span
                   className={cn(
-                    "text-sm font-medium transition-colors",
-                    status === "current" ? "text-slate-950" : "text-slate-600",
+                    "rounded-full border transition-all duration-300",
+                    status === "completed" &&
+                      "h-2.5 w-2.5 border-slate-700 bg-slate-700",
+                    status === "current" &&
+                      "h-3.5 w-3.5 border-slate-700 bg-white shadow-[0_0_0_4px_rgba(15,23,42,0.05)]",
+                    status === "upcoming" &&
+                      "h-2.5 w-2.5 border-slate-300 bg-white group-hover:border-slate-400",
                   )}
-                >
-                  {stage.title}
-                </p>
-                <p className="text-sm leading-6 text-slate-500">{stage.description}</p>
-              </div>
+                />
+              </span>
+              <p
+                className={cn(
+                  "text-sm leading-8 transition-colors duration-300",
+                  isCurrent
+                    ? "font-semibold text-slate-900"
+                    : status === "completed"
+                      ? "font-medium text-slate-700"
+                      : "font-medium text-slate-500 group-hover:text-slate-700",
+                )}
+              >
+                {step.label}
+              </p>
             </button>
           );
         })}

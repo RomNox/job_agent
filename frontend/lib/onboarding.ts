@@ -1,24 +1,39 @@
 import { getOptionalSafeNextPath } from "@/lib/auth";
 import type { OnboardingStateResponse } from "@/types/api";
 
+export const ONBOARDING_PATH = "/onboarding";
+export const SETUP_FLOW_PATH = "/timeline";
+
 export const ONBOARDING_STAGES = [
   {
-    id: "introduction",
+    id: "welcome",
   },
   {
-    id: "career-goal",
+    id: "personal-details",
   },
   {
-    id: "basic-profile",
+    id: "address",
   },
   {
-    id: "experience-skills",
+    id: "work-authorization",
+  },
+  {
+    id: "target-role",
+  },
+  {
+    id: "work-experience",
+  },
+  {
+    id: "education",
+  },
+  {
+    id: "skills",
+  },
+  {
+    id: "languages",
   },
   {
     id: "job-preferences",
-  },
-  {
-    id: "cv-background",
   },
   {
     id: "ready",
@@ -51,14 +66,42 @@ export function getStageStatus(
 export function buildOnboardingPath(rawNextPath?: string | null): string {
   const nextPath = getOptionalSafeNextPath(rawNextPath);
   if (!nextPath) {
-    return "/onboarding";
+    return ONBOARDING_PATH;
   }
 
-  return `/onboarding?next=${encodeURIComponent(nextPath)}`;
+  if (isPathname(nextPath, ONBOARDING_PATH)) {
+    return nextPath;
+  }
+
+  return `${ONBOARDING_PATH}?next=${encodeURIComponent(nextPath)}`;
+}
+
+export function buildSetupFlowPath(
+  rawNextPath?: string | null,
+  step?: number,
+): string {
+  const nextPath = getOptionalSafeNextPath(rawNextPath);
+
+  if (nextPath && isPathname(nextPath, SETUP_FLOW_PATH)) {
+    return updateStepParam(nextPath, step);
+  }
+
+  const params = new URLSearchParams();
+
+  if (step !== undefined) {
+    params.set("step", String(Math.max(step, 0)));
+  }
+
+  if (nextPath) {
+    params.set("next", nextPath);
+  }
+
+  const queryString = params.toString();
+  return queryString ? `${SETUP_FLOW_PATH}?${queryString}` : SETUP_FLOW_PATH;
 }
 
 export function getPostSignupDestination(rawNextPath?: string | null): string {
-  return buildOnboardingPath(rawNextPath);
+  return buildSetupFlowPath(rawNextPath);
 }
 
 export function getPostLoginDestination(
@@ -67,12 +110,34 @@ export function getPostLoginDestination(
 ): string {
   const nextPath = getOptionalSafeNextPath(rawNextPath);
   if (!onboardingState.completed) {
-    return buildOnboardingPath(nextPath);
+    if (nextPath && (isPathname(nextPath, ONBOARDING_PATH) || isPathname(nextPath, SETUP_FLOW_PATH))) {
+      return nextPath;
+    }
+
+    return buildSetupFlowPath(nextPath);
   }
 
-  return nextPath ?? "/search";
+  return nextPath ?? "/workspace";
 }
 
 export function getPostOnboardingDestination(rawNextPath?: string | null): string {
-  return getOptionalSafeNextPath(rawNextPath) ?? "/search";
+  return getOptionalSafeNextPath(rawNextPath) ?? "/workspace";
+}
+
+function isPathname(path: string, targetPathname: string) {
+  try {
+    return new URL(path, "http://job-agent.local").pathname === targetPathname;
+  } catch {
+    return false;
+  }
+}
+
+function updateStepParam(path: string, step?: number) {
+  if (step === undefined) {
+    return path;
+  }
+
+  const parsed = new URL(path, "http://job-agent.local");
+  parsed.searchParams.set("step", String(Math.max(step, 0)));
+  return `${parsed.pathname}${parsed.search}${parsed.hash}`;
 }

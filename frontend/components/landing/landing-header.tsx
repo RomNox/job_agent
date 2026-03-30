@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useTransition } from "react";
 
 import { useAuth } from "@/components/auth/auth-provider";
+import { BrandLogo } from "@/components/brand-logo";
 import { LanguageSwitcher } from "@/components/i18n/language-switcher";
 import { useI18n } from "@/components/i18n/locale-provider";
 import { buttonVariants } from "@/components/ui/button";
@@ -30,19 +31,7 @@ export function LandingHeader() {
   return (
     <header className="sticky top-0 z-30 border-b border-slate-200/80 bg-white/75 backdrop-blur-xl supports-[backdrop-filter]:bg-white/72">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3.5 sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-2xl border border-slate-300 text-sm font-semibold text-slate-950">
-            JA
-          </div>
-          <div className="space-y-0.5">
-            <p className="text-sm font-semibold tracking-tight text-slate-950">
-              {t("common.brandName")}
-            </p>
-            <p className="text-xs uppercase tracking-[0.16em] text-slate-500">
-              {t("common.marketLabel")}
-            </p>
-          </div>
-        </Link>
+        <BrandLogo />
 
         <nav className="hidden items-center gap-6 xl:flex">
           {navigationItems.map((item) => (

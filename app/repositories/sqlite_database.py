@@ -67,6 +67,8 @@ class SQLiteDatabase:
                     salary_expectation TEXT NOT NULL DEFAULT '',
                     professional_summary TEXT NOT NULL DEFAULT '',
                     cv_text TEXT NOT NULL DEFAULT '',
+                    user_profile_json TEXT NOT NULL DEFAULT '{}',
+                    resume_profile_json TEXT NOT NULL DEFAULT '{}',
                     created_at TEXT NOT NULL,
                     updated_at TEXT NOT NULL,
                     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
@@ -83,3 +85,32 @@ class SQLiteDatabase:
                 );
                 """
             )
+            self._ensure_column(
+                connection,
+                table_name="candidate_profiles",
+                column_name="user_profile_json",
+                column_sql="TEXT NOT NULL DEFAULT '{}'",
+            )
+            self._ensure_column(
+                connection,
+                table_name="candidate_profiles",
+                column_name="resume_profile_json",
+                column_sql="TEXT NOT NULL DEFAULT '{}'",
+            )
+
+    def _ensure_column(
+        self,
+        connection: sqlite3.Connection,
+        *,
+        table_name: str,
+        column_name: str,
+        column_sql: str,
+    ) -> None:
+        rows = connection.execute(f"PRAGMA table_info({table_name})").fetchall()
+        existing_columns = {row["name"] for row in rows}
+        if column_name in existing_columns:
+            return
+
+        connection.execute(
+            f"ALTER TABLE {table_name} ADD COLUMN {column_name} {column_sql}"
+        )

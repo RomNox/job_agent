@@ -12,7 +12,7 @@ import {
   getSafeNextPath,
   isUnauthorizedError,
 } from "@/lib/auth";
-import { buildOnboardingPath } from "@/lib/onboarding";
+import { buildSetupFlowPath } from "@/lib/onboarding";
 import { useAuth } from "@/components/auth/auth-provider";
 import { Button } from "@/components/ui/button";
 
@@ -78,7 +78,7 @@ export function AuthGuard({
         }
 
         setOnboardingStatus("redirecting");
-        router.replace(buildOnboardingPath(safeNextPath));
+        router.replace(buildSetupFlowPath(safeNextPath));
       } catch (error) {
         if (!isActive) {
           return;
@@ -195,10 +195,10 @@ export function AuthGuard({
                 {t("common.actions.retry")}
               </Button>
               <Link
-                href={buildOnboardingPath(safeNextPath)}
+                href={buildSetupFlowPath(safeNextPath)}
                 className="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 px-5 text-sm font-semibold text-slate-900 transition-colors hover:bg-slate-50"
               >
-                {t("guard.openOnboarding")}
+                {t("guard.openSetupFlow")}
               </Link>
             </div>
           </div>

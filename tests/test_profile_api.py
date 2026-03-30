@@ -71,25 +71,55 @@ def test_get_profile_returns_default_profile_for_authenticated_user(
 
     response = client.get("/api/v1/profile")
 
+    payload = response.json()
     assert response.status_code == 200
-    assert response.json() == {
-        "user_id": register_response.json()["id"],
-        "full_name": "Anna Schmidt",
+    assert payload["user_id"] == register_response.json()["id"]
+    assert payload["full_name"] == "Anna Schmidt"
+    assert payload["email"] == "anna@example.com"
+    assert payload["phone"] == ""
+    assert payload["location"] == ""
+    assert payload["target_role"] == ""
+    assert payload["years_of_experience"] is None
+    assert payload["skills"] == ""
+    assert payload["languages"] == ""
+    assert payload["work_authorization"] == ""
+    assert payload["remote_preference"] == ""
+    assert payload["preferred_locations"] == ""
+    assert payload["salary_expectation"] == ""
+    assert payload["professional_summary"] == (
+        "Anna's resume profile for the German job market."
+    )
+    assert "Anna Schmidt" in payload["cv_text"]
+    assert payload["created_at"] is None
+    assert payload["updated_at"] is None
+    assert payload["user"] == {
+        "first_name": "Anna",
+        "last_name": "Schmidt",
+        "birth_year": None,
         "email": "anna@example.com",
         "phone": "",
-        "location": "",
-        "target_role": "",
-        "years_of_experience": None,
-        "skills": "",
-        "languages": "",
-        "work_authorization": "",
-        "remote_preference": "",
-        "preferred_locations": "",
-        "salary_expectation": "",
-        "professional_summary": "",
-        "cv_text": "",
-        "created_at": None,
-        "updated_at": None,
+        "address": {
+            "street": "",
+            "city": "",
+            "postal_code": "",
+            "country": "",
+        },
+    }
+    assert payload["resume"] == {
+        "professional_title": "",
+        "summary": "Anna's resume profile for the German job market.",
+        "experience": [],
+        "education": [],
+        "skills": [],
+        "languages": [],
+        "preferences": {
+            "work_authorization_status": "",
+            "years_of_experience": None,
+            "preferred_locations": [],
+            "work_mode": "",
+            "salary_expectation": "",
+            "availability": "",
+        },
     }
 
 
@@ -131,6 +161,21 @@ def test_put_profile_creates_profile_for_authenticated_user(
     assert payload["user_id"] == register_response.json()["id"]
     assert payload["target_role"] == "Python Developer"
     assert payload["skills"] == "Python, FastAPI, SQL"
+    assert payload["user"]["first_name"] == "Anna"
+    assert payload["resume"]["professional_title"] == "Python Developer"
+    assert payload["resume"]["skills"] == ["Python", "FastAPI", "SQL"]
+    assert payload["resume"]["languages"] == [
+        {"language": "German", "level": "C1"},
+        {"language": "English", "level": "C1"},
+    ]
+    assert payload["resume"]["preferences"] == {
+        "work_authorization_status": "EU citizen",
+        "years_of_experience": 4,
+        "preferred_locations": ["Berlin", "Remote"],
+        "work_mode": "Hybrid",
+        "salary_expectation": "EUR 75,000",
+        "availability": "",
+    }
     assert payload["created_at"] is not None
     assert payload["updated_at"] is not None
 
@@ -191,6 +236,7 @@ def test_put_profile_updates_existing_profile(client: TestClient) -> None:
     assert second_response.json()["location"] == "Hamburg"
     assert second_response.json()["target_role"] == "Senior Backend Engineer"
     assert second_response.json()["skills"] == "Python, FastAPI, PostgreSQL"
+    assert second_response.json()["resume"]["preferences"]["work_mode"] == "Remote"
     assert second_response.json()["created_at"] == first_response.json()["created_at"]
     assert second_response.json()["updated_at"] != first_response.json()["updated_at"]
 
@@ -200,6 +246,103 @@ def test_get_profile_rejects_unauthenticated_access(client: TestClient) -> None:
 
     assert response.status_code == 401
     assert response.json() == {"detail": "Authentication required."}
+
+
+def test_put_profile_accepts_structured_resume_payload(client: TestClient) -> None:
+    register_response = client.post(
+        "/api/v1/auth/register",
+        json={
+            "full_name": "Laura Becker",
+            "email": "laura@example.com",
+            "password": "supersecret123",
+        },
+    )
+    assert register_response.status_code == 201
+
+    response = client.put(
+        "/api/v1/profile",
+        json={
+            "full_name": "Laura Becker",
+            "email": "laura@example.com",
+            "phone": "+49 171 1111111",
+            "location": "Hamburg, Germany",
+            "target_role": "Data Engineer",
+            "years_of_experience": 6,
+            "skills": "Python, SQL, Airflow",
+            "languages": "German C1, English C1",
+            "work_authorization": "Blue Card",
+            "remote_preference": "Hybrid",
+            "preferred_locations": "Hamburg, Berlin",
+            "salary_expectation": "EUR 82,000",
+            "professional_summary": "",
+            "cv_text": "Existing resume reference",
+            "user": {
+                "first_name": "Laura",
+                "last_name": "Becker",
+                "birth_year": 1991,
+                "email": "laura@example.com",
+                "phone": "+49 171 1111111",
+                "address": {
+                    "street": "Elbchaussee 10",
+                    "city": "Hamburg",
+                    "postal_code": "22765",
+                    "country": "Germany",
+                },
+            },
+            "resume": {
+                "professional_title": "Data Engineer",
+                "summary": "",
+                "experience": [
+                    {
+                        "job_title": "Senior Data Engineer",
+                        "company": "Nord Data GmbH",
+                        "location": "Hamburg",
+                        "start_date": "2022-01",
+                        "end_date": "Present",
+                        "responsibilities": "Built analytics pipelines and owned ETL quality.",
+                        "technologies_used": ["Python", "Airflow", "Snowflake"],
+                    }
+                ],
+                "education": [
+                    {
+                        "institution": "University of Hamburg",
+                        "degree": "M.Sc.",
+                        "field_of_study": "Computer Science",
+                        "start_year": 2013,
+                        "end_year": 2015,
+                    }
+                ],
+                "skills": ["Python", "SQL", "Airflow"],
+                "languages": [
+                    {"language": "German", "level": "C1"},
+                    {"language": "English", "level": "C1"},
+                ],
+                "preferences": {
+                    "work_authorization_status": "Blue Card",
+                    "years_of_experience": 6,
+                    "preferred_locations": ["Hamburg", "Berlin"],
+                    "work_mode": "Hybrid",
+                    "salary_expectation": "EUR 82,000",
+                    "availability": "Available in 4 weeks",
+                },
+            },
+        },
+    )
+
+    payload = response.json()
+    assert response.status_code == 200
+    assert payload["user_id"] == register_response.json()["id"]
+    assert payload["location"] == "Hamburg, Germany"
+    assert payload["resume"]["experience"][0]["company"] == "Nord Data GmbH"
+    assert payload["resume"]["education"][0]["institution"] == "University of Hamburg"
+    assert payload["resume"]["preferences"]["availability"] == "Available in 4 weeks"
+    assert payload["professional_summary"] == (
+        "Data Engineer with 6 years of professional experience. "
+        "Core skills include Python, SQL, Airflow. "
+        "Focused on opportunities in Hamburg, Berlin. "
+        "Work authorization: Blue Card."
+    )
+    assert payload["cv_text"] == "Existing resume reference"
 
 
 def test_profile_persistence_is_isolated_per_user(client: TestClient) -> None:

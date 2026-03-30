@@ -7,6 +7,7 @@ import {
   candidateProfileFormSchema,
   candidateProfileResponseSchema,
   jobSearchResponseSchema,
+  onboardingResumeFormSchema,
   jobSearchResultSchema,
   loginFormSchema,
   jobPostingSchema,
@@ -20,6 +21,7 @@ import {
 export type LoginFormValues = z.infer<typeof loginFormSchema>;
 export type SignupFormValues = z.infer<typeof signupFormSchema>;
 export type CandidateProfileFormValues = z.infer<typeof candidateProfileFormSchema>;
+export type OnboardingResumeFormValues = z.infer<typeof onboardingResumeFormSchema>;
 export type WorkspaceFormValues = z.infer<typeof workspaceFormSchema>;
 export type ParsedJobResponse = z.infer<typeof parsedJobSchema>;
 export type JobPostingResponse = z.infer<typeof jobPostingSchema>;
@@ -31,6 +33,11 @@ export type AuthUserResponse = z.infer<typeof authUserSchema>;
 export type AuthStatusResponse = z.infer<typeof authStatusSchema>;
 export type CandidateProfileResponse = z.infer<typeof candidateProfileResponseSchema>;
 export type OnboardingStateResponse = z.infer<typeof onboardingStateSchema>;
+export type ResumeUserProfile = CandidateProfileResponse["user"];
+export type ResumeProfileData = CandidateProfileResponse["resume"];
+export type ResumeExperienceEntry = ResumeProfileData["experience"][number];
+export type ResumeEducationEntry = ResumeProfileData["education"][number];
+export type ResumeLanguageEntry = ResumeProfileData["languages"][number];
 
 export type CandidateProfilePayload = {
   full_name: string;
@@ -112,6 +119,8 @@ export type UpsertCandidateProfilePayload = {
   salary_expectation: string;
   professional_summary: string;
   cv_text: string;
+  user?: CandidateProfileResponse["user"];
+  resume?: CandidateProfileResponse["resume"];
 };
 
 export type UpdateOnboardingStatePayload = {

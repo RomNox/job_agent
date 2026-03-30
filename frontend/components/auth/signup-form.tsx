@@ -22,7 +22,7 @@ type SignupFormProps = {
   nextPath?: string;
 };
 
-export function SignupForm({ nextPath = "/search" }: SignupFormProps) {
+export function SignupForm({ nextPath = "/workspace" }: SignupFormProps) {
   const router = useRouter();
   const { register, status } = useAuth();
   const { t } = useI18n();

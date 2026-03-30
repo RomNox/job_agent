@@ -152,14 +152,14 @@ def test_put_onboarding_can_mark_completion(client: TestClient) -> None:
     response = client.put(
         "/api/v1/onboarding",
         json={
-            "current_step": 6,
+            "current_step": 10,
             "completed": True,
         },
     )
 
     assert response.status_code == 200
-    assert response.json()["current_step"] == 6
-    assert response.json()["furthest_step"] == 6
+    assert response.json()["current_step"] == 10
+    assert response.json()["furthest_step"] == 10
     assert response.json()["completed"] is True
 
 

@@ -731,6 +731,283 @@ export const en: DeepPartialMessages<Messages> = {
         "Tell your assistant which role it should focus on first.",
       stepCounter: "Step {current} of {total}",
     },
+    resumeFlow: {
+      headerDescription:
+        "Step by step, we will prepare a resume your assistant can use for job search in Germany.",
+      timelineTitle: "Resume setup",
+      timelineDescription:
+        "Each step adds an important part of your profile so the assistant can review vacancies and prepare applications more accurately.",
+      timelineHelper:
+        "You can move between steps from the timeline. When you go forward, your current progress is saved.",
+      status: {
+        loading: "Loading your resume onboarding...",
+        unavailable: "Onboarding is unavailable right now.",
+        draftLoaded: "Your saved resume draft has been loaded.",
+        accountPrefilled:
+          "We already filled in the account details we had available.",
+        loadError: "Unable to load your resume onboarding right now.",
+        completeError: "Unable to complete onboarding right now.",
+        finalReviewReady: "Your profile is ready for a final review.",
+        progressSaved: "Your progress has been saved.",
+        saveError: "Unable to save your resume right now.",
+        updateError: "Unable to update the current step right now.",
+        fileTooLarge: "The reference file must be smaller than 2 MB.",
+        fileLoaded: "Your reference text has been added.",
+        fileReadError: "The selected file could not be read.",
+        guidedSelected:
+          "We will build your resume together step by step.",
+        uploadSelected:
+          "You can now add an existing resume as reference.",
+      },
+      actions: {
+        continue: "Continue",
+        createResume: "Create resume",
+        uploadExistingResume: "Upload existing resume",
+        uploadFile: "Upload file",
+        clearReference: "Clear reference",
+        addAnotherPosition: "Add another position",
+        addAnotherEducation: "Add another education",
+        addAnotherLanguage: "Add another language",
+        remove: "Remove",
+      },
+      start: {
+        guidedDescription:
+          "We will guide you through your first resume in a few short steps.",
+        uploadDescription:
+          "Use an existing resume as reference and fill in the missing details.",
+        referenceTitle: "Use an existing resume as reference",
+        referenceDescription:
+          "Paste text from your current resume or upload a text-based file. This helps the assistant understand your background faster.",
+        referenceLabel: "Resume reference text",
+        referencePlaceholder:
+          "Paste your existing resume text here...",
+      },
+      steps: [
+        {
+          shortLabel: "Welcome",
+          eyebrow: "First resume",
+          title: "Let's create your resume",
+          description: [
+            "We will guide you through a few short steps to build your professional profile.",
+            "This information will help the assistant analyze job opportunities, prepare applications, and support your job search in Germany.",
+            "The process only takes a few minutes and you will be able to edit everything later.",
+          ],
+        },
+        {
+          shortLabel: "Personal",
+          eyebrow: "Basic profile",
+          title: "Personal details",
+          description: [
+            "Let's start with a few basic details about you.",
+            "These details are normally included in a resume and are commonly required when applying for jobs in Germany.",
+            "They also help the assistant prepare job applications automatically.",
+          ],
+        },
+        {
+          shortLabel: "Location",
+          eyebrow: "Address",
+          title: "Location and address",
+          description: [
+            "Employers in Germany often expect resumes to include your location.",
+            "This helps companies understand whether the position is realistic for you and whether relocation might be required.",
+          ],
+        },
+        {
+          shortLabel: "Authorization",
+          eyebrow: "Work eligibility",
+          title: "Work authorization",
+          description: [
+            "Some job listings in Germany require permission to work in the country.",
+            "By adding this information, the assistant can better evaluate which jobs are relevant for you.",
+          ],
+        },
+        {
+          shortLabel: "Role",
+          eyebrow: "Target position",
+          title: "Your target role",
+          description: [
+            "Tell us what kind of position you are looking for.",
+            "The assistant will use this information to analyze job listings and estimate how well your profile matches each opportunity.",
+          ],
+        },
+        {
+          shortLabel: "Experience",
+          eyebrow: "Professional background",
+          title: "Work experience",
+          description: [
+            "Your professional experience is one of the most important parts of your resume.",
+            "Adding your previous positions helps the assistant understand your background and compare it with job requirements.",
+          ],
+        },
+        {
+          shortLabel: "Education",
+          eyebrow: "Academic background",
+          title: "Education",
+          description: [
+            "Education can be important for certain roles in Germany, especially for visa programs and regulated professions.",
+            "Add your education history so it can be included in your resume.",
+          ],
+        },
+        {
+          shortLabel: "Skills",
+          eyebrow: "Core skills",
+          title: "Skills",
+          description: [
+            "List the main skills you use in your work.",
+            "The assistant will compare these skills with job requirements and highlight positions that match your profile.",
+          ],
+        },
+        {
+          shortLabel: "Languages",
+          eyebrow: "Language skills",
+          title: "Languages",
+          description: [
+            "Language requirements are very common in German job listings.",
+            "Adding your language skills helps the assistant evaluate job compatibility more accurately.",
+          ],
+        },
+        {
+          shortLabel: "Preferences",
+          eyebrow: "Work environment",
+          title: "Job preferences",
+          description: [
+            "Finally, tell us what kind of work environment you are looking for.",
+            "These preferences help the assistant prioritize job opportunities that fit your expectations.",
+          ],
+        },
+        {
+          shortLabel: "Finish",
+          eyebrow: "Ready",
+          title: "Your resume is ready",
+          description: [
+            "Your professional profile has been created.",
+            "You can now analyze job listings, prepare applications, and manage your job search with the assistant.",
+          ],
+        },
+      ],
+      fields: {
+        firstName: "First name",
+        lastName: "Last name",
+        birthYear: "Birth year",
+        email: "Email",
+        phone: "Phone",
+        street: "Street",
+        city: "City",
+        postalCode: "Postal code",
+        country: "Country",
+        workAuthorizationStatus: "Work authorization status",
+        desiredRole: "Desired role",
+        yearsOfExperience: "Years of experience",
+        jobTitle: "Job title",
+        company: "Company",
+        location: "Location",
+        startDate: "Start date",
+        endDate: "End date",
+        responsibilities: "Responsibilities",
+        technologiesUsed: "Technologies used",
+        institution: "Institution",
+        degree: "Degree",
+        fieldOfStudy: "Field of study",
+        startYear: "Start year",
+        endYear: "End year",
+        skills: "Skills",
+        language: "Language",
+        level: "Level",
+        preferredLocations: "Preferred locations",
+        workMode: "Remote / Hybrid / Office",
+        salaryExpectation: "Salary expectation",
+        availability: "Availability",
+      },
+      placeholders: {
+        firstName: "Anna",
+        lastName: "Schmidt",
+        birthYear: "1994",
+        email: "anna@example.com",
+        phone: "+49 151 23456789",
+        street: "Example Street 12",
+        city: "Berlin",
+        postalCode: "10115",
+        country: "Germany",
+        desiredRole: "Backend Engineer",
+        yearsOfExperience: "5",
+        jobTitle: "Software Engineer",
+        company: "Example GmbH",
+        location: "Berlin, Germany",
+        startDate: "01/2021",
+        endDate: "03/2024 or present",
+        responsibilities:
+          "Describe the main responsibilities and outcomes of this role.",
+        technologiesUsed: "Python, SQL, Docker",
+        institution: "Technical University of Berlin",
+        degree: "Master's degree",
+        fieldOfStudy: "Computer Science",
+        startYear: "2016",
+        endYear: "2018",
+        language: "German",
+        level: "C1",
+        preferredLocations: "Berlin, Hamburg, Remote",
+        salaryExpectation: "EUR 65,000 gross",
+        availability: "Immediately / from June 2026",
+      },
+      options: {
+        workAuthorization: [
+          { value: "EU citizen", label: "EU citizen" },
+          { value: "Blue Card", label: "Blue Card" },
+          { value: "Work visa", label: "Work visa" },
+          { value: "Need sponsorship", label: "Need sponsorship" },
+        ],
+        workMode: [
+          { value: "Remote", label: "Remote" },
+          { value: "Hybrid", label: "Hybrid" },
+          { value: "Office", label: "Office" },
+        ],
+      },
+      experience: {
+        intro:
+          "Previous roles give the assistant the clearest view of your background. For each position, add the scope of your work, your impact, and the technologies you used.",
+        itemLabel: "Position {number}",
+        countOne: "{count} position added",
+        countOther: "{count} positions added",
+      },
+      education: {
+        itemLabel: "Education {number}",
+        countOne: "{count} education entry added",
+        countOther: "{count} education entries added",
+      },
+      skills: {
+        inputPlaceholder: "Type a skill and confirm with Enter",
+        example: "Example: Python, SQL, Docker, AWS, React",
+      },
+      languages: {
+        itemLabel: "Language {number}",
+        countOne: "{count} language added",
+        countOther: "{count} languages added",
+      },
+      ready: {
+        notice:
+          "Your professional profile has been created. Review the key details before you continue to the assistant.",
+        cards: {
+          profile: "Profile",
+          resume: "Resume",
+          preferences: "Preferences",
+        },
+        labels: {
+          name: "Name",
+          email: "Email",
+          phone: "Phone",
+          location: "Location",
+          workAuthorization: "Work authorization",
+          targetRole: "Target role",
+          yearsOfExperience: "Years of experience",
+          skills: "Skills",
+          languages: "Languages",
+          preferredLocations: "Preferred locations",
+          workMode: "Work mode",
+          salary: "Salary",
+          availability: "Availability",
+        },
+      },
+    },
     stages: [
       {
         title: "Introduction",
@@ -827,6 +1104,51 @@ export const en: DeepPartialMessages<Messages> = {
         "After this, you can search, refine your profile, or open the assistant with a specific vacancy.",
     },
   },
+  setupFlow: {
+    loading: "Loading your flow...",
+    loadError: "Unable to load this flow right now.",
+    actions: {
+      continue: "Continue",
+      openAssistant: "Open assistant",
+      retry: "Retry",
+    },
+    steps: [
+      {
+        label: "Start",
+        title: "Let’s get acquainted",
+        description: [
+          "I’m your Job Agent. I will help you build a clear path to working in Germany — based on real market expectations and what employers actually value.",
+          "We’ll start with your resume and move forward together — toward real applications and first results.",
+        ],
+      },
+      {
+        label: "Resume",
+        title: "Create your first resume",
+        description: [
+          "Your first required step is the resume.",
+          "When you open the checklist item below, the existing onboarding starts. After that, you return right here.",
+        ],
+      },
+      {
+        label: "Continue",
+        title: "Then move straight into the assistant",
+        description: [
+          "Once the resume is done, Job Agent can help you review vacancies and prepare applications.",
+          "Onboarding stays a separate tool inside the overall flow.",
+        ],
+      },
+    ],
+    checklist: {
+      title: "Checklist",
+      description: "Finish this step before moving forward in the flow.",
+      items: {
+        createResume: "Create your first resume",
+      },
+      pending: "Opens the existing onboarding as a separate step.",
+      completed: "Done. You can continue now.",
+      continueLocked: "Complete the checklist item first to continue.",
+    },
+  },
   guard: {
     sessionUnavailableTitle: "Session check unavailable",
     sessionUnavailableDescription:
@@ -836,5 +1158,6 @@ export const en: DeepPartialMessages<Messages> = {
       "Unable to verify onboarding progress right now. Please try again in a moment.",
     openLogin: "Open login",
     openOnboarding: "Open onboarding",
+    openSetupFlow: "Open flow",
   },
 };

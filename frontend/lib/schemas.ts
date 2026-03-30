@@ -123,6 +123,255 @@ export function createWorkspaceFormSchema(t: TranslateFn = getValidationText) {
 
 export const workspaceFormSchema = createWorkspaceFormSchema();
 
+const onboardingTagListSchema = z.array(z.string().trim().min(1)).default([]);
+
+function createRequiredOnboardingTextField(message: string) {
+  return z.string().trim().min(1, message);
+}
+
+function createRequiredOnboardingYearField(
+  requiredMessage: string,
+  invalidMessage: string,
+) {
+  return z
+    .string()
+    .trim()
+    .min(1, requiredMessage)
+    .refine(
+      (value) =>
+        /^\d{4}$/.test(value) && Number(value) >= 1900 && Number(value) <= 2100,
+      invalidMessage,
+    );
+}
+
+function createOptionalOnboardingYearField(invalidMessage: string) {
+  return z
+    .string()
+    .trim()
+    .default("")
+    .refine(
+      (value) =>
+        !value ||
+        (/^\d{4}$/.test(value) &&
+          Number(value) >= 1900 &&
+          Number(value) <= 2100),
+      invalidMessage,
+    );
+}
+
+export const onboardingExperienceEntrySchema = z
+  .object({
+    job_title: z.string().default(""),
+    company: z.string().default(""),
+    location: z.string().default(""),
+    start_date: z.string().default(""),
+    end_date: z.string().default(""),
+    responsibilities: z.string().default(""),
+    technologies_used: onboardingTagListSchema,
+  })
+  .superRefine((value, ctx) => {
+    const hasContent = Boolean(
+      value.job_title.trim() ||
+        value.company.trim() ||
+        value.location.trim() ||
+        value.start_date.trim() ||
+        value.end_date.trim() ||
+        value.responsibilities.trim() ||
+        value.technologies_used.length,
+    );
+    if (!hasContent) {
+      return;
+    }
+
+    if (!value.job_title.trim()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["job_title"],
+        message: "Enter the job title.",
+      });
+    }
+
+    if (!value.company.trim()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["company"],
+        message: "Enter the company name.",
+      });
+    }
+
+    if (!value.start_date.trim()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["start_date"],
+        message: "Enter the start date.",
+      });
+    }
+  });
+
+export const onboardingEducationEntrySchema = z
+  .object({
+    institution: z.string().default(""),
+    degree: z.string().default(""),
+    field_of_study: z.string().default(""),
+    start_year: createOptionalOnboardingYearField("Enter a valid start year."),
+    end_year: createOptionalOnboardingYearField("Enter a valid end year."),
+  })
+  .superRefine((value, ctx) => {
+    const hasContent = Boolean(
+      value.institution.trim() ||
+        value.degree.trim() ||
+        value.field_of_study.trim() ||
+        value.start_year.trim() ||
+        value.end_year.trim(),
+    );
+    if (!hasContent) {
+      return;
+    }
+
+    if (!value.institution.trim()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["institution"],
+        message: "Enter the institution name.",
+      });
+    }
+  });
+
+export const onboardingLanguageEntrySchema = z
+  .object({
+    language: z.string().default(""),
+    level: z.string().default(""),
+  })
+  .superRefine((value, ctx) => {
+    const hasContent = Boolean(value.language.trim() || value.level.trim());
+    if (!hasContent) {
+      return;
+    }
+
+    if (!value.language.trim()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["language"],
+        message: "Enter the language.",
+      });
+    }
+
+    if (!value.level.trim()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["level"],
+        message: "Enter the level.",
+      });
+    }
+  });
+
+export const resumeAddressSchema = z.object({
+  street: z.string().default(""),
+  city: z.string().default(""),
+  postal_code: z.string().default(""),
+  country: z.string().default(""),
+});
+
+export const resumeUserProfileSchema = z.object({
+  first_name: z.string().default(""),
+  last_name: z.string().default(""),
+  birth_year: z.number().int().nullable(),
+  email: z.string(),
+  phone: z.string(),
+  address: resumeAddressSchema,
+});
+
+export const resumePreferencesSchema = z.object({
+  work_authorization_status: z.string(),
+  years_of_experience: z.number().int().nullable(),
+  preferred_locations: onboardingTagListSchema,
+  work_mode: z.string(),
+  salary_expectation: z.string(),
+  availability: z.string(),
+});
+
+export const resumeExperienceEntryResponseSchema = z.object({
+  job_title: z.string(),
+  company: z.string(),
+  location: z.string(),
+  start_date: z.string(),
+  end_date: z.string(),
+  responsibilities: z.string(),
+  technologies_used: onboardingTagListSchema,
+});
+
+export const resumeEducationEntryResponseSchema = z.object({
+  institution: z.string(),
+  degree: z.string(),
+  field_of_study: z.string(),
+  start_year: z.number().int().nullable(),
+  end_year: z.number().int().nullable(),
+});
+
+export const resumeLanguageEntryResponseSchema = z.object({
+  language: z.string(),
+  level: z.string(),
+});
+
+export const resumeProfileSchema = z.object({
+  professional_title: z.string(),
+  summary: z.string(),
+  experience: z.array(resumeExperienceEntryResponseSchema),
+  education: z.array(resumeEducationEntryResponseSchema),
+  skills: onboardingTagListSchema,
+  languages: z.array(resumeLanguageEntryResponseSchema),
+  preferences: resumePreferencesSchema,
+});
+
+export const onboardingResumeFormSchema = z.object({
+  start_method: z.enum(["guided", "upload"]).default("guided"),
+  resume_reference_text: z.string().default(""),
+  user: z.object({
+    first_name: createRequiredOnboardingTextField("Enter your first name."),
+    last_name: createRequiredOnboardingTextField("Enter your last name."),
+    birth_year: createRequiredOnboardingYearField(
+      "Enter your birth year.",
+      "Enter a valid birth year.",
+    ),
+    email: z
+      .string()
+      .trim()
+      .min(1, "Enter your email address.")
+      .email("Enter a valid email address."),
+    phone: createRequiredOnboardingTextField("Enter your phone number."),
+    address: z.object({
+      street: createRequiredOnboardingTextField("Enter your street."),
+      city: createRequiredOnboardingTextField("Enter your city."),
+      postal_code: createRequiredOnboardingTextField("Enter your postal code."),
+      country: createRequiredOnboardingTextField("Enter your country."),
+    }),
+  }),
+  resume: z.object({
+    professional_title: createRequiredOnboardingTextField(
+      "Enter your desired role.",
+    ),
+    summary: z.string().default(""),
+    experience: z.array(onboardingExperienceEntrySchema).default([]),
+    education: z.array(onboardingEducationEntrySchema).default([]),
+    skills: onboardingTagListSchema,
+    languages: z.array(onboardingLanguageEntrySchema).default([]),
+    preferences: z.object({
+      work_authorization_status: createRequiredOnboardingTextField(
+        "Select your work authorization status.",
+      ),
+      years_of_experience: z
+        .string()
+        .trim()
+        .min(1, "Enter your years of experience.")
+        .refine((value) => /^\d+$/.test(value), "Use a whole number."),
+      preferred_locations: onboardingTagListSchema,
+      work_mode: z.string().default(""),
+      salary_expectation: z.string().default(""),
+      availability: z.string().default(""),
+    }),
+  }),
+});
+
 export const parsedJobSchema = z.object({
   source_url: z.string(),
   page_title: z.string().nullable(),
@@ -236,6 +485,8 @@ export const candidateProfileResponseSchema = z.object({
   salary_expectation: z.string(),
   professional_summary: z.string(),
   cv_text: z.string(),
+  user: resumeUserProfileSchema,
+  resume: resumeProfileSchema,
   created_at: z.string().nullable(),
   updated_at: z.string().nullable(),
 });

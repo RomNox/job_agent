@@ -742,6 +742,288 @@ export const de = {
         "Sag deinem Assistenten zuerst, auf welche Rolle er achten soll.",
       stepCounter: "Schritt {current} von {total}",
     },
+    resumeFlow: {
+      headerDescription:
+        "Schritt für Schritt zu einem Lebenslauf, den dein Assistent für die Jobsuche in Deutschland nutzen kann.",
+      timelineTitle: "Lebenslauf-Setup",
+      timelineDescription:
+        "Jeder Schritt ergänzt einen Teil deines Profils, damit Stellen besser bewertet und Bewerbungen sauber vorbereitet werden können.",
+      timelineHelper:
+        "Du kannst über die Punkte zu jedem Schritt springen. Beim Vorwärtsgehen speichern wir deinen aktuellen Stand.",
+      status: {
+        loading: "Dein Lebenslauf-Onboarding wird geladen...",
+        unavailable: "Das Onboarding ist gerade nicht verfügbar.",
+        draftLoaded: "Dein gespeicherter Lebenslauf wurde geladen.",
+        accountPrefilled:
+          "Verfügbare Kontodaten haben wir bereits für dich eingetragen.",
+        loadError:
+          "Dein Lebenslauf-Onboarding konnte gerade nicht geladen werden.",
+        completeError:
+          "Das Onboarding konnte gerade nicht abgeschlossen werden.",
+        finalReviewReady:
+          "Dein Profil ist bereit für die letzte Prüfung.",
+        progressSaved: "Dein Fortschritt wurde gespeichert.",
+        saveError: "Dein Lebenslauf konnte gerade nicht gespeichert werden.",
+        updateError:
+          "Der Schrittwechsel konnte gerade nicht gespeichert werden.",
+        fileTooLarge:
+          "Die Referenzdatei darf nicht größer als 2 MB sein.",
+        fileLoaded: "Der Referenztext wurde hinzugefügt.",
+        fileReadError: "Die Datei konnte nicht gelesen werden.",
+        guidedSelected:
+          "Wir erstellen deinen Lebenslauf jetzt Schritt für Schritt.",
+        uploadSelected:
+          "Du kannst jetzt einen vorhandenen Lebenslauf als Referenz hinzufügen.",
+      },
+      actions: {
+        continue: "Weiter",
+        createResume: "Lebenslauf erstellen",
+        uploadExistingResume: "Vorhandenen Lebenslauf hochladen",
+        uploadFile: "Datei hochladen",
+        clearReference: "Referenz entfernen",
+        addAnotherPosition: "Weitere Position hinzufügen",
+        addAnotherEducation: "Weitere Ausbildung hinzufügen",
+        addAnotherLanguage: "Weitere Sprache hinzufügen",
+        remove: "Entfernen",
+      },
+      start: {
+        guidedDescription:
+          "Wir führen dich in kurzen Schritten durch deinen ersten Lebenslauf.",
+        uploadDescription:
+          "Nutze einen vorhandenen Lebenslauf als Referenz und ergänze fehlende Angaben.",
+        referenceTitle: "Vorhandenen Lebenslauf als Referenz nutzen",
+        referenceDescription:
+          "Du kannst Text aus einem bestehenden Lebenslauf einfügen oder eine Textdatei hochladen. So versteht der Assistent deinen Hintergrund schneller.",
+        referenceLabel: "Referenztext zum Lebenslauf",
+        referencePlaceholder:
+          "Füge hier den Text deines vorhandenen Lebenslaufs ein...",
+      },
+      steps: [
+        {
+          shortLabel: "Willkommen",
+          eyebrow: "Erster Lebenslauf",
+          title: "Lass uns deinen Lebenslauf erstellen",
+          description: [
+            "Wir führen dich in ein paar kurzen Schritten durch dein berufliches Profil.",
+            "Diese Angaben helfen dem Assistenten, Stellen zu analysieren, Bewerbungen vorzubereiten und deine Jobsuche in Deutschland zu unterstützen.",
+            "Das dauert nur wenige Minuten und du kannst später alles anpassen.",
+          ],
+        },
+        {
+          shortLabel: "Persönlich",
+          eyebrow: "Persönliche Angaben",
+          title: "Persönliche Angaben",
+          description: [
+            "Beginnen wir mit ein paar grundlegenden Angaben zu dir.",
+            "Diese Daten gehören in Deutschland meist in einen Lebenslauf und werden für Bewerbungen häufig benötigt.",
+            "Außerdem kann der Assistent damit Bewerbungsunterlagen automatisch vorbereiten.",
+          ],
+        },
+        {
+          shortLabel: "Ort",
+          eyebrow: "Adresse",
+          title: "Ort und Adresse",
+          description: [
+            "Arbeitgeber in Deutschland erwarten im Lebenslauf oft eine Angabe zum Wohnort.",
+            "So wird schneller klar, ob eine Stelle für dich realistisch ist und ob ein Umzug nötig wäre.",
+          ],
+        },
+        {
+          shortLabel: "Arbeit",
+          eyebrow: "Arbeitserlaubnis",
+          title: "Arbeitserlaubnis",
+          description: [
+            "Viele Stellen in Deutschland setzen eine gültige Arbeitserlaubnis voraus.",
+            "Mit dieser Angabe kann der Assistent besser einschätzen, welche Jobs wirklich zu deinem Profil passen.",
+          ],
+        },
+        {
+          shortLabel: "Rolle",
+          eyebrow: "Zielposition",
+          title: "Deine Zielrolle",
+          description: [
+            "Beschreibe, nach welcher Position du suchst.",
+            "Der Assistent nutzt diese Information, um Stellenanzeigen zu bewerten und deine Passung zu jeder Gelegenheit einzuschätzen.",
+          ],
+        },
+        {
+          shortLabel: "Erfahrung",
+          eyebrow: "Beruflicher Hintergrund",
+          title: "Berufserfahrung",
+          description: [
+            "Deine Berufserfahrung ist einer der wichtigsten Teile deines Lebenslaufs.",
+            "Frühere Positionen helfen dem Assistenten, deinen Hintergrund zu verstehen und mit Stellenanforderungen zu vergleichen.",
+          ],
+        },
+        {
+          shortLabel: "Bildung",
+          eyebrow: "Ausbildung",
+          title: "Ausbildung",
+          description: [
+            "Für bestimmte Rollen in Deutschland ist Ausbildung oder Studium besonders relevant, etwa bei Visa-Programmen oder reglementierten Berufen.",
+            "Füge deine Ausbildungsstationen hinzu, damit sie im Lebenslauf berücksichtigt werden können.",
+          ],
+        },
+        {
+          shortLabel: "Skills",
+          eyebrow: "Kompetenzen",
+          title: "Skills",
+          description: [
+            "Liste die wichtigsten Fähigkeiten auf, die du in deiner Arbeit einsetzt.",
+            "Der Assistent vergleicht diese Skills mit Stellenanforderungen und hebt passende Positionen hervor.",
+          ],
+        },
+        {
+          shortLabel: "Sprachen",
+          eyebrow: "Sprachkenntnisse",
+          title: "Sprachen",
+          description: [
+            "Sprachanforderungen sind in deutschen Stellenanzeigen sehr häufig.",
+            "Mit deinen Sprachkenntnissen kann der Assistent die Kompatibilität einer Stelle genauer einschätzen.",
+          ],
+        },
+        {
+          shortLabel: "Wünsche",
+          eyebrow: "Arbeitsumfeld",
+          title: "Job-Präferenzen",
+          description: [
+            "Zum Schluss beschreibst du, welches Arbeitsumfeld du suchst.",
+            "Diese Präferenzen helfen dem Assistenten, die Chancen zu priorisieren, die zu deinen Erwartungen passen.",
+          ],
+        },
+        {
+          shortLabel: "Fertig",
+          eyebrow: "Abschluss",
+          title: "Dein Lebenslauf ist bereit",
+          description: [
+            "Dein berufliches Profil wurde erstellt.",
+            "Jetzt kannst du Stellen analysieren, Bewerbungen vorbereiten und deine Jobsuche mit dem Assistenten organisieren.",
+          ],
+        },
+      ],
+      fields: {
+        firstName: "Vorname",
+        lastName: "Nachname",
+        birthYear: "Geburtsjahr",
+        email: "E-Mail",
+        phone: "Telefon",
+        street: "Straße",
+        city: "Stadt",
+        postalCode: "Postleitzahl",
+        country: "Land",
+        workAuthorizationStatus: "Status der Arbeitserlaubnis",
+        desiredRole: "Gewünschte Rolle",
+        yearsOfExperience: "Berufserfahrung in Jahren",
+        jobTitle: "Positionsbezeichnung",
+        company: "Unternehmen",
+        location: "Ort",
+        startDate: "Startdatum",
+        endDate: "Enddatum",
+        responsibilities: "Aufgaben",
+        technologiesUsed: "Verwendete Technologien",
+        institution: "Institution",
+        degree: "Abschluss",
+        fieldOfStudy: "Fachrichtung",
+        startYear: "Startjahr",
+        endYear: "Endjahr",
+        skills: "Skills",
+        language: "Sprache",
+        level: "Niveau",
+        preferredLocations: "Bevorzugte Orte",
+        workMode: "Arbeitsmodell",
+        salaryExpectation: "Gehaltsvorstellung",
+        availability: "Verfügbarkeit",
+      },
+      placeholders: {
+        firstName: "Anna",
+        lastName: "Schmidt",
+        birthYear: "1994",
+        email: "anna@example.com",
+        phone: "+49 151 23456789",
+        street: "Beispielstraße 12",
+        city: "Berlin",
+        postalCode: "10115",
+        country: "Deutschland",
+        desiredRole: "Backend Engineer",
+        yearsOfExperience: "5",
+        jobTitle: "Software Engineer",
+        company: "Muster GmbH",
+        location: "Berlin, Deutschland",
+        startDate: "01/2021",
+        endDate: "03/2024 oder heute",
+        responsibilities:
+          "Beschreibe die wichtigsten Aufgaben und Ergebnisse dieser Rolle.",
+        technologiesUsed: "Python, SQL, Docker",
+        institution: "Technische Universität Berlin",
+        degree: "Master",
+        fieldOfStudy: "Informatik",
+        startYear: "2016",
+        endYear: "2018",
+        language: "Deutsch",
+        level: "C1",
+        preferredLocations: "Berlin, Hamburg, Remote",
+        salaryExpectation: "EUR 65.000 brutto",
+        availability: "Ab sofort / ab Juni 2026",
+      },
+      options: {
+        workAuthorization: [
+          { value: "EU citizen", label: "EU-Bürger:in" },
+          { value: "Blue Card", label: "Blue Card" },
+          { value: "Work visa", label: "Arbeitsvisum" },
+          { value: "Need sponsorship", label: "Sponsoring nötig" },
+        ],
+        workMode: [
+          { value: "Remote", label: "Remote" },
+          { value: "Hybrid", label: "Hybrid" },
+          { value: "Office", label: "Vor Ort" },
+        ],
+      },
+      experience: {
+        intro:
+          "Frühere Positionen geben dem Assistenten den besten Überblick über deinen Hintergrund. Beschreibe pro Rolle kurz Aufgaben, Wirkung und relevante Technologien.",
+        itemLabel: "Position {number}",
+        countOne: "{count} Position hinzugefügt",
+        countOther: "{count} Positionen hinzugefügt",
+      },
+      education: {
+        itemLabel: "Ausbildung {number}",
+        countOne: "{count} Ausbildung hinzugefügt",
+        countOther: "{count} Ausbildungen hinzugefügt",
+      },
+      skills: {
+        inputPlaceholder: "Skill eingeben und mit Enter bestätigen",
+        example: "Beispiel: Python, SQL, Docker, AWS, React",
+      },
+      languages: {
+        itemLabel: "Sprache {number}",
+        countOne: "{count} Sprache hinzugefügt",
+        countOther: "{count} Sprachen hinzugefügt",
+      },
+      ready: {
+        notice:
+          "Dein berufliches Profil ist erstellt. Prüfe kurz die wichtigsten Angaben, bevor du zum Assistenten wechselst.",
+        cards: {
+          profile: "Profil",
+          resume: "Lebenslauf",
+          preferences: "Präferenzen",
+        },
+        labels: {
+          name: "Name",
+          email: "E-Mail",
+          phone: "Telefon",
+          location: "Ort",
+          workAuthorization: "Arbeitserlaubnis",
+          targetRole: "Zielrolle",
+          yearsOfExperience: "Berufserfahrung",
+          skills: "Skills",
+          languages: "Sprachen",
+          preferredLocations: "Bevorzugte Orte",
+          workMode: "Arbeitsmodell",
+          salary: "Gehalt",
+          availability: "Verfügbarkeit",
+        },
+      },
+    },
     stages: [
       {
         title: "Einführung",
@@ -838,6 +1120,54 @@ export const de = {
         "Danach kannst du suchen, dein Profil pflegen oder mit einer konkreten Vakanz in den Assistenten gehen.",
     },
   },
+  setupFlow: {
+    loading: "Dein Ablauf wird geladen...",
+    loadError: "Der Ablauf konnte gerade nicht geladen werden.",
+    actions: {
+      continue: "Weiter",
+      openAssistant: "Assistent öffnen",
+      retry: "Erneut versuchen",
+    },
+    steps: [
+      {
+        label: "Start",
+        title: "Lernen wir uns kennen",
+        description: [
+          "Ich bin dein Job Agent. Ich helfe dir, einen klaren Weg zur Arbeit in Deutschland aufzubauen — basierend auf den Anforderungen des Arbeitsmarktes und dem, was Arbeitgeber wirklich erwarten.",
+          "Wir beginnen mit deinem Lebenslauf und gehen diesen Weg gemeinsam weiter — hin zu echten Bewerbungen und ersten Ergebnissen.",
+        ],
+      },
+      {
+        label: "Lebenslauf",
+        title: "Erstelle deinen ersten Lebenslauf",
+        description: [
+          "Der erste Pflichtschritt ist dein Lebenslauf.",
+          "Wenn du den Punkt unten öffnest, startet das bestehende Onboarding. Danach kommst du wieder genau hierhin zurück.",
+        ],
+      },
+      {
+        label: "Weiter",
+        title: "Danach geht es direkt in den Assistenten",
+        description: [
+          "Sobald der Lebenslauf fertig ist, kannst du mit Job Agent Stellen prüfen und Unterlagen vorbereiten.",
+          "Das Onboarding bleibt dabei ein separates Werkzeug im Ablauf.",
+        ],
+      },
+    ],
+    checklist: {
+      title: "Checkliste",
+      description:
+        "Schließe diesen Schritt ab, bevor du im Ablauf weitergehst.",
+      items: {
+        createResume: "Ersten Lebenslauf erstellen",
+      },
+      pending:
+        "Öffnet das bestehende Onboarding in einem separaten Schritt.",
+      completed: "Erledigt. Du kannst jetzt weitergehen.",
+      continueLocked:
+        "Schließe zuerst den Punkt in der Checkliste ab, um weiterzugehen.",
+    },
+  },
   guard: {
     sessionUnavailableTitle: "Sitzungsprüfung derzeit nicht verfügbar",
     sessionUnavailableDescription:
@@ -848,6 +1178,7 @@ export const de = {
       "Der Onboarding-Fortschritt konnte gerade nicht geprüft werden. Bitte in Kürze erneut versuchen.",
     openLogin: "Anmeldung öffnen",
     openOnboarding: "Onboarding öffnen",
+    openSetupFlow: "Ablauf öffnen",
   },
 } as const;
 

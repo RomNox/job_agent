@@ -1,9 +1,14 @@
 from __future__ import annotations
 
+import json
 import sqlite3
 from datetime import datetime
 
-from app.models.candidate_profile import CandidateProfileRecord
+from app.models.candidate_profile import (
+    CandidateProfileRecord,
+    ResumeProfile,
+    ResumeUserProfile,
+)
 from app.repositories.sqlite_database import SQLiteDatabase
 
 
@@ -31,6 +36,8 @@ class CandidateProfileRepository:
                     salary_expectation,
                     professional_summary,
                     cv_text,
+                    user_profile_json,
+                    resume_profile_json,
                     created_at,
                     updated_at
                 FROM candidate_profiles
@@ -61,10 +68,12 @@ class CandidateProfileRepository:
                     salary_expectation,
                     professional_summary,
                     cv_text,
+                    user_profile_json,
+                    resume_profile_json,
                     created_at,
                     updated_at
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(user_id) DO UPDATE SET
                     full_name = excluded.full_name,
                     email = excluded.email,
@@ -80,6 +89,8 @@ class CandidateProfileRepository:
                     salary_expectation = excluded.salary_expectation,
                     professional_summary = excluded.professional_summary,
                     cv_text = excluded.cv_text,
+                    user_profile_json = excluded.user_profile_json,
+                    resume_profile_json = excluded.resume_profile_json,
                     updated_at = excluded.updated_at
                 """,
                 (
@@ -98,6 +109,8 @@ class CandidateProfileRepository:
                     profile.salary_expectation,
                     profile.professional_summary,
                     profile.cv_text,
+                    json.dumps(profile.user.model_dump(mode="json")),
+                    json.dumps(profile.resume.model_dump(mode="json")),
                     _serialize_datetime(profile.created_at),
                     _serialize_datetime(profile.updated_at),
                 ),
@@ -132,6 +145,8 @@ def _row_to_candidate_profile(
         salary_expectation=row["salary_expectation"],
         professional_summary=row["professional_summary"],
         cv_text=row["cv_text"],
+        user=_deserialize_resume_user_profile(row["user_profile_json"]),
+        resume=_deserialize_resume_profile(row["resume_profile_json"]),
         created_at=datetime.fromisoformat(row["created_at"]),
         updated_at=datetime.fromisoformat(row["updated_at"]),
     )
@@ -139,3 +154,32 @@ def _row_to_candidate_profile(
 
 def _serialize_datetime(value: datetime) -> str:
     return value.isoformat()
+
+
+def _deserialize_resume_user_profile(value: str | None) -> ResumeUserProfile:
+    payload = _deserialize_json_payload(value)
+    if payload is None:
+        return ResumeUserProfile()
+    return ResumeUserProfile.model_validate(payload)
+
+
+def _deserialize_resume_profile(value: str | None) -> ResumeProfile:
+    payload = _deserialize_json_payload(value)
+    if payload is None:
+        return ResumeProfile()
+    return ResumeProfile.model_validate(payload)
+
+
+def _deserialize_json_payload(value: str | None) -> dict[str, object] | None:
+    if not value:
+        return None
+
+    try:
+        payload = json.loads(value)
+    except json.JSONDecodeError:
+        return None
+
+    if isinstance(payload, dict):
+        return payload
+
+    return None

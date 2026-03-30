@@ -22,7 +22,7 @@ type LoginFormProps = {
   nextPath?: string;
 };
 
-export function LoginForm({ nextPath = "/search" }: LoginFormProps) {
+export function LoginForm({ nextPath = "/workspace" }: LoginFormProps) {
   const router = useRouter();
   const { login, status } = useAuth();
   const { t } = useI18n();

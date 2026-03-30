@@ -16,6 +16,8 @@
     --primary: 222 47% 11%;
     --primary-foreground: 0 0% 100%;
     --radius: 1.25rem;
+    --onboarding-step-exit-duration: 560ms;
+    --onboarding-step-enter-duration: 920ms;
   }
 
   * {
@@ -33,5 +35,82 @@
       linear-gradient(to right, rgba(226, 232, 240, 0.35) 1px, transparent 1px),
       linear-gradient(to bottom, rgba(226, 232, 240, 0.35) 1px, transparent 1px);
     background-size: 36px 36px;
+  }
+
+  .animate-onboarding-step-exit-forward {
+    animation: onboarding-step-exit-forward var(--onboarding-step-exit-duration)
+      cubic-bezier(0.24, 0.72, 0.22, 1) both;
+  }
+
+  .animate-onboarding-step-exit-backward {
+    animation: onboarding-step-exit-backward var(--onboarding-step-exit-duration)
+      cubic-bezier(0.24, 0.72, 0.22, 1) both;
+  }
+
+  .animate-onboarding-step-enter-forward {
+    animation: onboarding-step-enter-forward var(--onboarding-step-enter-duration)
+      cubic-bezier(0.2, 0.88, 0.24, 1) both;
+  }
+
+  .animate-onboarding-step-enter-backward {
+    animation: onboarding-step-enter-backward var(--onboarding-step-enter-duration)
+      cubic-bezier(0.2, 0.88, 0.24, 1) both;
+  }
+}
+
+@keyframes onboarding-step-exit-forward {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translate3d(0, 84px, 0);
+  }
+}
+
+@keyframes onboarding-step-exit-backward {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translate3d(0, -84px, 0);
+  }
+}
+
+@keyframes onboarding-step-enter-forward {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -84px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes onboarding-step-enter-backward {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 84px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-onboarding-step-exit-forward,
+  .animate-onboarding-step-exit-backward,
+  .animate-onboarding-step-enter-forward,
+  .animate-onboarding-step-enter-backward {
+    animation: none;
   }
 }
